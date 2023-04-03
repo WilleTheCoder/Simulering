@@ -5,7 +5,7 @@ class State extends GlobalSimulation{
 	
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
-	public int numberInQueue1 = 0, numberInQueue2 = 0, accumulated = 0, noMeasurements = 0, arrivalTime = 0;
+	public int numberInQueue1 = 0, numberInQueue2 = 0, accumulated = 0, noMeasurements = 0, arrivalTime = 0, noRejected = 0, arrivals = 0;
 
 	Random slump = new Random(); // This is just a random number generator
 	
@@ -39,17 +39,26 @@ class State extends GlobalSimulation{
 	
 	private void arrival1(){
 		if(numberInQueue1 < 10) {
-			if (numberInQueue1 == 0)
-				insertEvent(READY1, time + this.exp(2.1));
+			if (numberInQueue1 == 0){
+				insertEvent(READY1, time + exp(2.1));
+			}
 			numberInQueue1++;
-			insertEvent(ARRIVAL1, time + arrivalTime);
+				
+		} else {
+			this.noRejected++;
+			
 		}
+		arrivals++;
+		insertEvent(ARRIVAL1, time + arrivalTime);
 	}
 	
 	private void ready1(){
-		numberInQueue1--;
-		if (numberInQueue1 > 0)
-			insertEvent(ARRIVAL2, time + this.exp(2.1));
+		if (numberInQueue1 > 0){
+			numberInQueue1--;
+			double x =  exp(2.1);
+			insertEvent(READY1, time + x);
+		}
+		insertEvent(ARRIVAL2, time);
 	}
 	
 	private void arrival2(){
@@ -59,22 +68,21 @@ class State extends GlobalSimulation{
 	}
 
 	private void ready2(){
-		numberInQueue2--;
 		if (numberInQueue2 > 0){
+			numberInQueue2--;
 			insertEvent(READY2, time + 2);
 		}
 	}
 	
 	private void measure(){
-		accumulated = accumulated + numberInQueue1 + numberInQueue2;
+		accumulated = accumulated + numberInQueue2;
 		noMeasurements++;
-		insertEvent(MEASURE, time + slump.nextDouble()*10);
+		insertEvent(MEASURE, time + exp(5));
 	}
 
-	private double exp(double time){
-		double x = slump.nextDouble()*10;
-		return (1/time)*Math.exp(-(1/time)*x);
-		
+	public double exp(double time){
+		double lambda = 1/time;
+		return Math.log(1-slump.nextDouble())/(-lambda);
 	}
 
 }
