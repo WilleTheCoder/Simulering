@@ -11,7 +11,7 @@ public class MainSimulation extends GlobalSimulation{
         insertEvent(ARRIVAL1, 0);  
         insertEvent(MEASURE, 5);
         
-		actState.arrivalTime = 1; //1, 2, 5
+		actState.arrivalTime = 5; //1, 2, 5
 
         // The main simulation loop
     	while (time < 5000){
@@ -21,6 +21,7 @@ public class MainSimulation extends GlobalSimulation{
     	}
     	
     	// Printing the result of the simulation, in this case a mean value
+		System.out.println("no of measurments: " + actState.noMeasurements);
     	System.out.println(1.0*actState.accumulated/actState.noMeasurements);
     }
 }

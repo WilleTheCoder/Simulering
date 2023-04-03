@@ -4416,3 +4416,5 @@ java.nio.file.InvalidPathException: Illegal char <:> at index 4: file:///C:/plug
 	at java.lang.Thread.run(Thread.java:833)
 
 2023.04.03 13:46:02 INFO  time: code lens generation in 10s
+apr. 03, 2023 1:46:28 EM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
