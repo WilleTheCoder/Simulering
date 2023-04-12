@@ -1,2 +1,4 @@
-.metals/
-.vscode/
+.settings/
+.bin/
+*.classpath
+*.project

@@ -1,3 +1,5 @@
+package Task2;
+
 import java.util.*;
 
 class State extends GlobalSimulation{
