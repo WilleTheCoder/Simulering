@@ -6,10 +6,10 @@ class State extends GlobalSimulation{
 	
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
-	public int numberInQueue_A = 0, numberInQueue_B = 0, accumulated = 0, noMeasurements = 0;
+	public int numberInQueue_A = 0, numberInQueue_B = 0, totalCustomerInQueues = 0, noMeasurements = 0;
 
 	// 𝜆 = 150 𝑠-1, 𝑥A =0.002 𝑠, 𝑥B =0.004 𝑠 and 𝑑 = 1 𝑠.
-	private double a = 1.0/150, xA = 0.002, xB = 0.004;
+	private double a = 1.0/150, xA = 0.002, xB = 0.004, d = 1;
 	Random slump = new Random(); // This is just a random number generator
 	
 	
@@ -83,15 +83,14 @@ class State extends GlobalSimulation{
 		}
 
 		if(job == 'A'){
-			insertEvent(ARRIVAL_B, time + 1); //change value of delay d
+			insertEvent(ARRIVAL_B, time + d); //delay
 		}
 	}
 	
 	private void measure(){
-		accumulated = accumulated + numberInQueue_A+numberInQueue_B;
+		totalCustomerInQueues = totalCustomerInQueues + numberInQueue_A + numberInQueue_B;
 		noMeasurements++;
 		insertEvent(MEASURE, time + 0.1);
-		// System.out.println("Number in queue: " + numberInQueue_A + " : " + numberInQueue_B);
 	}
 
 	public double exp(double time){

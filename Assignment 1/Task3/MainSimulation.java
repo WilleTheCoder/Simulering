@@ -1,8 +1,5 @@
-package Task1;
-
 import java.util.*;
 import java.io.*;
-
 
 public class MainSimulation extends GlobalSimulation{
  
@@ -11,7 +8,7 @@ public class MainSimulation extends GlobalSimulation{
     	State actState = new State(); // The state that shoud be used
     	// Some events must be put in the event list at the beginning
         insertEvent(ARRIVAL1, 0);  
-        insertEvent(MEASURE, 5);
+        insertEvent(MEASURE, actState.a);
 
         // The main simulation loop
     	while (time < 5000){
@@ -21,13 +18,14 @@ public class MainSimulation extends GlobalSimulation{
     	}
 
     	// Printing the result of the simulation, in this case a mean value
+		System.out.println("--------TASK3--------\n");
 
-		System.out.println("--------TASK1--------\n");
+    	System.out.println("Observed mean number of customers: " + 1.0*actState.accumulated/actState.noMeasurements);
+    	System.out.println("Calculated mean number of customers: " + 2/(actState.a-1));
 
-		System.out.println("Mean number of customers in Q2: " + (1.0*actState.totalNumberInQueue2)/actState.noMeasurements);
-
-		System.out.println("Probability that a customer is rejected: " + 1.0*actState.noRejected/actState.arrivals);
-
+    	System.out.println("Observed mean time a customers spends: " + 1.0*time/actState.accumulated);
+    	System.out.println("Calculated mean time a customers spends: " + (2*actState.a)/(actState.a-1));
+		
 		System.out.println("\n----------END----------");
     }
 }
