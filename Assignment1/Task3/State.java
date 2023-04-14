@@ -6,11 +6,14 @@ class State extends GlobalSimulation{
 	
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
-	public int numberInQueue1 = 0, numberInQueue2 = 0, accumulated = 0, noMeasurements = 0, arrivals = 0;
+	public int numberInQueue1 = 0, numberInQueue2 = 0, accumulated = 0, noMeasurements = 0, arrivals = 0, numberOfGoing = 0;
 
 	Random slump = new Random(); // This is just a random number generator
 	
-	public double a = 2, x1 = 1, x2 = 1;
+	public double timeInTotal = 0;
+	public double a = 2.0, x1 = 1, x2 = 1;
+
+	LinkedList<Double> arrivalTimeList = new LinkedList<>();
 	
 	// The following method is called by the main program each time a new event has been fetched
 	// from the event list in the main loop. 
@@ -40,6 +43,7 @@ class State extends GlobalSimulation{
 	// things are getting more complicated than this.
 	
 	private void arrival1(){
+			arrivalTimeList.addLast(time);
 			if (numberInQueue1 == 0){
 				insertEvent(READY1, time + exp(x1));
 			}
@@ -50,8 +54,8 @@ class State extends GlobalSimulation{
 	}
 	
 	private void ready1(){
+		numberInQueue1--;
 		if (numberInQueue1 > 0){
-			numberInQueue1--;
 			double x =  exp(x1);
 			insertEvent(READY1, time + x);
 		}
@@ -65,14 +69,16 @@ class State extends GlobalSimulation{
 	}
 
 	private void ready2(){
+		numberOfGoing++;
+		numberInQueue2--;
+		timeInTotal += time - arrivalTimeList.poll();
 		if (numberInQueue2 > 0){
-			numberInQueue2--;
 			insertEvent(READY2, time + x2);
 		}
 	}
 	
 	private void measure(){
-		accumulated = accumulated + numberInQueue2;
+		accumulated = accumulated + numberInQueue1 + numberInQueue2;
 		noMeasurements++;
 		insertEvent(MEASURE, time + exp(5));
 	}

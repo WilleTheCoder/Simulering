@@ -5,28 +5,34 @@ import java.io.*;
 // This class defines a simple queuing system with one server. It inherits Proc so that we can use time and the
 // signal names without dot notation
 class QS extends Proc{
-	public int numberInQueue = 0, numberInQueueN = 0, numberInQueueS = 0,  totalNumberInQueueS = 0, accumulated, noMeasurements;
+	public int numberInQueue = 0, numberInQueueN = 0, numberInQueueS = 0,  totalNumberInQueueS = 0, accumulated, noMeasurements, numberOfGoingN = 0, numberOfGoingS = 0, noArrivals = 0;
 	public Proc sendTo;
 	Random slump = new Random();
 
-	public double a = 300, x1 = 240, percentage = 0.1;
+	public double a = 300, x1 = 240, percentage = 0.5;
 
-	public ArrayList<Double> timeListNStart = new ArrayList<Double>();
-	public ArrayList<Double> timeListNEnd = new ArrayList<Double>();
-	public ArrayList<Double> timeListSStart = new ArrayList<Double>();
-	public ArrayList<Double> timeListSEnd = new ArrayList<Double>();
+	public double timeInTotalN = 0;
+	public double timeInTotalS = 0;
+	LinkedList<Double> arrivalTimeListN = new LinkedList<>();
+	LinkedList<Double> arrivalTimeListS = new LinkedList<>();
+	
+	// public ArrayList<Double> timeListNStart = new ArrayList<Double>();
+	// public ArrayList<Double> timeListNEnd = new ArrayList<Double>();
+	// public ArrayList<Double> timeListSStart = new ArrayList<Double>();
+	// public ArrayList<Double> timeListSEnd = new ArrayList<Double>();
 
 	public void TreatSignal(Signal x){
 		switch (x.signalType){
 			
 			case ARRIVAL:{
+				noArrivals++;
 				
 				if (this.isSkipper(percentage)){
 					numberInQueueS++;
-					timeListSStart.add(time);
+					arrivalTimeListS.addLast(time);
 				} else{
 					numberInQueueN++;
-					timeListNStart.add(time);
+					arrivalTimeListN.addLast(time);
 				}
 
 				if (numberInQueue == 0){
@@ -46,10 +52,18 @@ class QS extends Proc{
 
 					if(numberInQueueS > 0){
 						numberInQueueS--;
-						timeListSEnd.add(time);
+						Double ax = arrivalTimeListS.poll();
+						if(ax != null){
+							timeInTotalS += time - ax;
+							numberOfGoingS++;
+						}
 					} else{
 						numberInQueueN--;
-						timeListNEnd.add(time);
+						Double ax = arrivalTimeListN.poll();
+						if(ax != null){
+							timeInTotalN += time - ax;
+							numberOfGoingN++;
+						}
 					}
 
 					SignalList.SendSignal(READY, this, time + exp(x1));

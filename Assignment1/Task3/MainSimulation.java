@@ -24,7 +24,7 @@ public class MainSimulation extends GlobalSimulation{
     	System.out.println("Observed mean number of customers: " + 1.0*actState.accumulated/actState.noMeasurements);
     	System.out.println("Calculated mean number of customers: " + 2/(actState.a-1));
 
-    	System.out.println("Observed mean time a customers spends: " + 1.0*time/actState.accumulated);
+    	System.out.println("Observed mean time a customers spends: " + 1.0*actState.timeInTotal/actState.numberOfGoing);
     	System.out.println("Calculated mean time a customers spends: " + (2*actState.a)/(actState.a-1));
 		
 		System.out.println("\n----------END----------");

@@ -1,10 +1,7 @@
 
-import java.io.*;
-
-
 public class MainSimulation extends GlobalSimulation{
  
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
     	Event actEvent;
     	State actState = new State(); // The state that shoud be used
     	// Some events must be put in the event list at the beginning
@@ -12,7 +9,7 @@ public class MainSimulation extends GlobalSimulation{
         insertEvent(MEASURE, 0.1);
 
         // The main simulation loop
-    	while (time < 1000){
+    	while (time < 100){
     		actEvent = eventList.fetchEvent();
     		time = actEvent.eventTime;
     		actState.treatEvent(actEvent);
@@ -29,6 +26,11 @@ public class MainSimulation extends GlobalSimulation{
 
 		// 3. Let the distribution be of constant length = 1 s again. Change the priorities so that jobs of 
 		// type A have the higher priority. What is now the mean number of jobs in the buffer.
+
+
+		for(double i: actState.currentNumberInQueueList){
+			System.out.println(i);
+		}	
 
 		System.out.println("\n----------END----------");
 

@@ -39,7 +39,7 @@ public class MainSimulation extends Global{
     	// Detta �r simuleringsloopen:
     	// This is the main loop
 
-    	while (time < 100000){
+    	while (Q1.noArrivals < 20){
     		actSignal = SignalList.FetchSignal();
     		time = actSignal.arrivalTime;
     		actSignal.destination.TreatSignal(actSignal);
@@ -50,18 +50,10 @@ public class MainSimulation extends Global{
 		
 		System.out.println("--------TASK4--------\n");
     	System.out.println("Mean number of customers in queuing system: " + 1.0*Q1.accumulated/Q1.noMeasurements);
-		
+
 		// What is the average queuing time for people belonging to the two groups in each case? 
-		double sumN = 0, sumS = 0;
-		for (int i = 0; i < Q1.timeListNEnd.size(); i++) {
-			sumN += Q1.timeListNEnd.get(i)- Q1.timeListNStart.get(i);
-		}
-		for (int i = 0; i < Q1.timeListSEnd.size(); i++) {
-			sumS += Q1.timeListSEnd.get(i)- Q1.timeListSStart.get(i);
-		}
-		
-		System.out.println("Average queuing time for normal group: " + sumN/Q1.timeListNEnd.size()/60 + " min");
-		System.out.println("Average queuing time for skip group: " +sumS/Q1.timeListSEnd.size()/60 + " min");
+		System.out.println("Average queuing time for normal group: " + (Q1.timeInTotalN/Q1.numberOfGoingN)/60 + " min");
+		System.out.println("Average queuing time for skip group: " + (Q1.timeInTotalS/Q1.numberOfGoingS)/60+ " min");
 		System.out.println("\n----------END----------");
     }
 }
