@@ -9,7 +9,7 @@ class State extends GlobalSimulation{
 	public int numberInQueue1 = 0, numberInQueue2 = 0, totalNumberInQueue2 = 0, noMeasurements = 0, noRejected = 0, arrivals = 0;
 
 	Random slump = new Random(); // This is just a random number generator
-	public double a = 1, x1 = 2.1, x2 = 2;
+	public double a = 2, x1 = 2.1, x2 = 2;
 	
 	// The following method is called by the main program each time a new event has been fetched
 	// from the event list in the main loop. 
@@ -47,15 +47,14 @@ class State extends GlobalSimulation{
 				
 		} else {
 			this.noRejected++;
-			
 		}
 		arrivals++;
 		insertEvent(ARRIVAL1, time + a);
 	}
 	
 	private void ready1(){
+		numberInQueue1--;
 		if (numberInQueue1 > 0){
-			numberInQueue1--;
 			insertEvent(READY1, time + exp(x1));
 		}
 		insertEvent(ARRIVAL2, time);
@@ -64,12 +63,13 @@ class State extends GlobalSimulation{
 	private void arrival2(){
 		if (numberInQueue2 == 0)
 			insertEvent(READY2, time + x2);
+			
 		numberInQueue2++;
 	}
 
 	private void ready2(){
+		numberInQueue2--;
 		if (numberInQueue2 > 0){
-			numberInQueue2--;
 			insertEvent(READY2, time + x2);
 		}
 	}

@@ -20,6 +20,7 @@ public class MainSimulation extends GlobalSimulation{
 
 		System.out.println("--------TASK2--------\n");
 
+		System.out.println(actState.noMeasurements);
 		// 1. Find the mean number of jobs in the buffer for the system above:
     	System.out.println("Mean number of customers in the buffer: " +1.0*actState.totalCustomerInQueues/actState.noMeasurements);
 

@@ -23,6 +23,8 @@ public class MainSimulation extends GlobalSimulation{
 
 		System.out.println("--------TASK1--------\n");
 
+		System.out.println(actState.noMeasurements);
+
 		System.out.println("Mean number of customers in Q2: " + (1.0*actState.totalNumberInQueue2)/actState.noMeasurements);
 
 		System.out.println("Probability that a customer is rejected: " + 1.0*actState.noRejected/actState.arrivals);

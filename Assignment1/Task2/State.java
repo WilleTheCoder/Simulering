@@ -44,42 +44,42 @@ class State extends GlobalSimulation{
 	// things are getting more complicated than this.
 
 	private void arrivalA(){
-		// if (numberInQueue_A + numberInQueue_B == 0){ //B priority
-		// 	insertEvent(READY_A, time + xA);
-		// }
-		if (numberInQueue_A == 0){  //A priority
+		if (numberInQueue_A + numberInQueue_B == 0){ //B priority
 			insertEvent(READY_A, time + xA);
 		}
+		// if (numberInQueue_A == 0){  //A priority
+		// 	insertEvent(READY_A, time + xA);
+		// }
 
 		numberInQueue_A++;
 		insertEvent(ARRIVAL_A, time + exp(a));
 	}
 	private void arrivalB(){
-		// if (numberInQueue_B == 0){ //B priority
-		// 	insertEvent(READY_B, time + xB);
-		// }
-		if (numberInQueue_A + numberInQueue_B == 0){ //A priority
+		if (numberInQueue_B == 0){ //B priority
 			insertEvent(READY_B, time + xB);
 		}
+		// if (numberInQueue_A + numberInQueue_B == 0){ //A priority
+		// 	insertEvent(READY_B, time + xB);
+		// }
 		numberInQueue_B++;
 	}
 	
 	private void ready(char job){
-		// if(numberInQueue_B > 0){ //B priority
-		// 	insertEvent(READY_B, time + xB);
-		// 	numberInQueue_B--;
-		// } else if(numberInQueue_A > 0){
-		// 	insertEvent(READY_A, time + xA);
-		// 	numberInQueue_A--;
-		// }
-
-		if(numberInQueue_A > 0){ //A priority
-			insertEvent(READY_A, time + xA);
-			numberInQueue_A--;
-		} else if(numberInQueue_B > 0){
+		if(numberInQueue_B > 0){ //B priority
 			insertEvent(READY_B, time + xB);
 			numberInQueue_B--;
+		} else if(numberInQueue_A > 0){
+			insertEvent(READY_A, time + xA);
+			numberInQueue_A--;
 		}
+
+		// if(numberInQueue_A > 0){ //A priority
+		// 	insertEvent(READY_A, time + xA);
+		// 	numberInQueue_A--;
+		// } else if(numberInQueue_B > 0){
+		// 	insertEvent(READY_B, time + xB);
+		// 	numberInQueue_B--;
+		// }
 
 		if(job == 'A'){
 			insertEvent(ARRIVAL_B, time + d); //delay
