@@ -13,7 +13,7 @@ public class MainSimulation extends GlobalSimulation{
         insertEvent(MEASURE, 5);
 
         // The main simulation loop
-    	while (time < 5000){
+    	while (time < 10000){
     		actEvent = eventList.fetchEvent();
     		time = actEvent.eventTime;
     		actState.treatEvent(actEvent);
@@ -27,7 +27,7 @@ public class MainSimulation extends GlobalSimulation{
 
 		System.out.println("Mean number of customers in Q2: " + (1.0*actState.totalNumberInQueue2)/actState.noMeasurements);
 
-		System.out.println("Probability that a customer is rejected: " + 1.0*actState.noRejected/actState.arrivals);
+		System.out.println("Probability that a customer is rejected in Q1:  " + 1.0*actState.noRejected/actState.arrivals);
 
 		System.out.println("\n----------END----------");
     }

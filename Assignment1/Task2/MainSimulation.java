@@ -1,8 +1,12 @@
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class MainSimulation extends GlobalSimulation{
- 
+	public Double[] X;
+	public Double[] Y;
+
     public static void main(String[] args) {
-    	Event actEvent;
+		Event actEvent;
     	State actState = new State(); // The state that shoud be used
     	// Some events must be put in the event list at the beginning
         insertEvent(ARRIVAL_A, 0);  
@@ -28,15 +32,5 @@ public class MainSimulation extends GlobalSimulation{
 		// type A have the higher priority. What is now the mean number of jobs in the buffer.
 
 
-		for(double i: actState.currentNumberInQueueList){
-			System.out.println(i);
-		}	
-
 		System.out.println("\n----------END----------");
-
-
-
-		
-
-    }
 }

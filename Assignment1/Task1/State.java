@@ -9,7 +9,7 @@ class State extends GlobalSimulation{
 	public int numberInQueue1 = 0, numberInQueue2 = 0, totalNumberInQueue2 = 0, noMeasurements = 0, noRejected = 0, arrivals = 0;
 
 	Random slump = new Random(); // This is just a random number generator
-	public double a = 2, x1 = 2.1, x2 = 2;
+	public double a = 5, x1 = 2.1, x2 = 2;
 	
 	// The following method is called by the main program each time a new event has been fetched
 	// from the event list in the main loop. 

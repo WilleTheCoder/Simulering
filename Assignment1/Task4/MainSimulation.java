@@ -26,7 +26,7 @@ public class MainSimulation extends Global{
     	Q1.sendTo = null;
 
     	Gen Generator = new Gen();
-    	Generator.lambda = 1/Q1.a; //Generator ska generera nio kunder per sekund  //Generator shall generate 9 customers per second
+    	Generator.lambda = 1.0/5; //Generator ska generera nio kunder per sekund  //Generator shall generate 9 customers per second
     	Generator.sendTo = Q1; //De genererade kunderna ska skickas till k�systemet QS  // The generated customers shall be sent to Q1
 
     	//H�r nedan skickas de f�rsta signalerna f�r att simuleringen ska komma ig�ng.
@@ -39,7 +39,7 @@ public class MainSimulation extends Global{
     	// Detta �r simuleringsloopen:
     	// This is the main loop
 
-    	while (Q1.noArrivals < 20){
+    	while (Q1.noArrivals < 1000){
     		actSignal = SignalList.FetchSignal();
     		time = actSignal.arrivalTime;
     		actSignal.destination.TreatSignal(actSignal);
@@ -49,11 +49,17 @@ public class MainSimulation extends Global{
     	//Finally the result of the simulation is printed below:
 		
 		System.out.println("--------TASK4--------\n");
-    	System.out.println("Mean number of customers in queuing system: " + 1.0*Q1.accumulated/Q1.noMeasurements);
+		// System.out.println(Q1.noMeasurements);
+		// System.out.println(Q1.accumulated);
+
+		System.out.println(Q1.noArrivals);
+		System.out.println("#N: " + Q1.numberOfGoingN);
+		System.out.println("#S: " + Q1.numberOfGoingS);
+
 
 		// What is the average queuing time for people belonging to the two groups in each case? 
-		System.out.println("Average queuing time for normal group: " + (Q1.timeInTotalN/Q1.numberOfGoingN)/60 + " min");
-		System.out.println("Average queuing time for skip group: " + (Q1.timeInTotalS/Q1.numberOfGoingS)/60+ " min");
+		System.out.println("Average queuing time for normal group: " + (Q1.timeInTotalN/Q1.numberOfGoingN));
+		System.out.println("Average queuing time for skip group: " + (Q1.timeInTotalS/Q1.numberOfGoingS));
 		System.out.println("\n----------END----------");
     }
 }

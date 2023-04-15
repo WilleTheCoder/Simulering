@@ -9,7 +9,7 @@ class Gen extends Proc{
 	//Slumptalsgeneratorn startas:
 	//The random number generator is started:
 	Random slump = new Random();
-	public int noMeasurements = 0, totalNumberInQueue = 0;
+	public int noMeasurements = 0, totalNumberInQueues = 0;
 	//Generatorn har tv� parametrar:
 	//There are two parameters:
 	public List<QS> queues = new ArrayList<>(); 
@@ -30,7 +30,10 @@ class Gen extends Proc{
 
 			case MEASURE:{
 				noMeasurements++;
-				totalNumberInQueue = queues.stream().mapToInt(q -> q.numberInQueue).sum();
+
+				for (QS qs : queues) {
+					totalNumberInQueues += qs.numberInQueue;
+				}
 				
 				SignalList.SendSignal(MEASURE, this, time + 2*slump.nextDouble());
 				break;
