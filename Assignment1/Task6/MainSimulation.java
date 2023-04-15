@@ -14,10 +14,10 @@ public class MainSimulation extends GlobalSimulation{
 		// 1000 runs of the system
 		for (int i = 0; i < 1000; i++) {
 				insertEvent(ARRIVALS, 0);
-				insertEvent(MEASURE, 5);
+				// insertEvent(MEASURE, 5);
 	
 		        // The main simulation loop
-				while (actState.breakDownFlag != true){
+				while (actState.isBreakDown() != true){
 					actEvent = eventList.fetchEvent();
 					time = actEvent.eventTime;
 					actState.treatEvent(actEvent);

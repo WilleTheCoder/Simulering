@@ -43,9 +43,6 @@ class State extends GlobalSimulation{
 			case breakC5:
 				compBroken[4] = true;
 			break;
-			case MEASURE:
-				measure();
-				break;
 		}
 	}
 	
@@ -54,21 +51,12 @@ class State extends GlobalSimulation{
 	// have been placed in the case in treatEvent, but often it is simpler to write a method if 
 	// things are getting more complicated than this.
 
-	private void measure(){
-		System.out.println("im hererere");
-		int flag = 0;
+	public boolean isBreakDown(){
 		for (boolean status : compBroken) {
-			if(status){
-				flag = 1;
+			if(!status){
+				return false;
 			}
 		}
-
-		if(flag == 1){
-			breakDownFlag = true;
-		}
-
-		noMeasurements++;
-		insertEvent(MEASURE, time + slump.nextDouble()*2);
-
-		}
+		return true;
+	}
 }
