@@ -26,7 +26,7 @@ public class MainSimulation extends Global {
 		Gen Generator = new Gen();
 
 		// 0.11, 0.15 and 2.00 seconds
-		Generator.lambda = 1 / uni(0.11); // Generator ska generera nio kunder per sekund //Generator shall generate 9
+		Generator.lambda = 1 / QS.uni(0.11); // Generator ska generera nio kunder per sekund //Generator shall generate 9
 											// customers per second
 		// Generator.sendTo = Q[0]; //De genererade kunderna ska skickas till k�systemet
 		// QS // The generated customers shall be sent to Q1
@@ -70,11 +70,10 @@ public class MainSimulation extends Global {
 
 		System.out.println("Mean number of jobs in the queuing systems: "+ 1.0 * Generator.totalNumberInQueues / Generator.noMeasurements);
 
+		// for (int i = 0; i < 20; i++) {
+		// 	Generator.randomDistribution();
+		// }
 		System.out.println("\n----------END----------");
 	}
 
-	public static double uni(double mean) {
-		double mid = mean / 2;
-		return 2 * mid * Math.random() + mean - mid;
-	}
 }

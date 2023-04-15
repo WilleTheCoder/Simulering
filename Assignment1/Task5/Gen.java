@@ -9,7 +9,8 @@ class Gen extends Proc{
 	//Slumptalsgeneratorn startas:
 	//The random number generator is started:
 	Random slump = new Random();
-	public int noMeasurements = 0, totalNumberInQueues = 0;
+	public int noMeasurements = 0;
+	public long totalNumberInQueues = 0;
 	//Generatorn har tv� parametrar:
 	//There are two parameters:
 	public List<QS> queues = new ArrayList<>(); 
@@ -22,9 +23,10 @@ class Gen extends Proc{
 		switch (x.signalType){
 			case READY:{
 				//set sendTo variable
-				sendTo = randomDistribution();
+				sendTo = roundRobin();
 				SignalList.SendSignal(ARRIVAL, sendTo, time);
-				SignalList.SendSignal(READY, this, time + (2.0/lambda)*slump.nextDouble()); //send new signal to get new customer
+				SignalList.SendSignal(READY, this, time + 1/lambda); //send new signal to get new customer
+				// (2.0/lambda)*slump.nextDouble()
 			} 
 				break;
 
@@ -41,12 +43,13 @@ class Gen extends Proc{
 		}
 	}
 
-	private Proc randomDistribution() {
+	public Proc randomDistribution() {
 		int i = slump.nextInt(5);
 		return queues.get(i);
 	}
 
 	private Proc roundRobin() {
+		currentQueue = currentQueue%5;
 		Proc p = queues.get(currentQueue);
 		currentQueue++;
 		return p;

@@ -38,4 +38,8 @@ class QS extends Proc{
 		return Math.log(1-slump.nextDouble())/(-lambda);
 	}
 
+	public static double uni(double mean) {
+		double mid = mean / 2;
+		return 2 * mid * Math.random() + mean - mid;
+	}
 }

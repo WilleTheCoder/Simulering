@@ -5,9 +5,12 @@ class State extends GlobalSimulation{
 	
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
-	public int numberInQueue = 0, accumulated = 0, noMeasurements = 0;
-
+	public int noMeasurements = 0;
 	public boolean breakDownFlag = false;
+
+	public int components[] = {1,2,3,4,5};
+	public boolean compBroken[] = {false, false, false, false, false};
+
 
 	Random slump = new Random(); // This is just a random number generator
 	
@@ -16,12 +19,30 @@ class State extends GlobalSimulation{
 	// from the event list in the main loop. 
 	public void treatEvent(Event x){
 		switch (x.eventType){
-			case ARRIVAL:
-				arrival();
-				break;
-			case READY:
-				ready();
-				break;
+			case ARRIVALS: 
+				for(int comp : components){
+					insertEvent(comp, time + 1 + 4.0*slump.nextDouble());
+				}
+			break;
+			case breakC1:
+				compBroken[0] = true;
+				insertEvent(breakC2, time);
+				insertEvent(breakC5, time);
+
+			break;
+			case breakC2:
+				compBroken[1] = true;
+			break;
+			case breakC3:
+				compBroken[2] = true;
+				insertEvent(breakC4, time);
+			break;
+			case breakC4:
+				compBroken[3] = true;
+			break;
+			case breakC5:
+				compBroken[4] = true;
+			break;
 			case MEASURE:
 				measure();
 				break;
@@ -32,23 +53,22 @@ class State extends GlobalSimulation{
 	// The following methods defines what should be done when an event takes place. This could
 	// have been placed in the case in treatEvent, but often it is simpler to write a method if 
 	// things are getting more complicated than this.
-	
-	private void arrival(){
-		if (numberInQueue == 0)
-			insertEvent(READY, time + 2*slump.nextDouble());
-		numberInQueue++;
-		insertEvent(ARRIVAL, time + 2.5*slump.nextDouble());
-	}
-	
-	private void ready(){
-		numberInQueue--;
-		if (numberInQueue > 0)
-			insertEvent(READY, time + 2*slump.nextDouble());
-	}
-	
+
 	private void measure(){
-		accumulated = accumulated + numberInQueue;
+		System.out.println("im hererere");
+		int flag = 0;
+		for (boolean status : compBroken) {
+			if(status){
+				flag = 1;
+			}
+		}
+
+		if(flag == 1){
+			breakDownFlag = true;
+		}
+
 		noMeasurements++;
-		insertEvent(MEASURE, time + slump.nextDouble()*10);
-	}
+		insertEvent(MEASURE, time + slump.nextDouble()*2);
+
+		}
 }
