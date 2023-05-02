@@ -1,5 +1,3 @@
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class MainSimulation extends GlobalSimulation {
 	public Double[] X;
@@ -13,10 +11,11 @@ public class MainSimulation extends GlobalSimulation {
 		insertEvent(MEASURE, 5);
 
 		// The main simulation loop
-		while (time < 1000) {
+		while (actState.noMeasurements < 1000) {
 			actEvent = eventList.fetchEvent();
 			time = actEvent.eventTime;
 			actState.treatEvent(actEvent);
+			// System.out.println(actState.noMeasurements);
 		}
 
 		System.out.println("--------TASK2--------\n");
@@ -24,7 +23,7 @@ public class MainSimulation extends GlobalSimulation {
 		System.out.println(actState.noMeasurements);
 		// 1. Find the mean number of jobs in the buffer for the system above:
 		System.out.println("Mean number of customers in the buffer: "
-				+ 1.0 * actState.totalCustomerInQueues / actState.noMeasurements);
+				+ 1.0*actState.totalCustomerInQueues / actState.noMeasurements);
 
 		// 2. Let the delay distribution be exponential instead of always having the
 		// same value, but let its
