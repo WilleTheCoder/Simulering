@@ -7,7 +7,6 @@ class State extends GlobalSimulation{
 	// Here follows the state variables and other variables that might be needed
 	// e.g. for measurements
 	public int numberInQueue_A = 0, numberInQueue_B = 0, totalCustomerInQueues = 0, noMeasurements = 0;
-	public ArrayList<Double> currentNumberInQueueList = new ArrayList<Double>();
 
 	// 𝜆 = 150 𝑠-1, 𝑥A =0.002 𝑠, 𝑥B =0.004 𝑠 and 𝑑 = 1 𝑠.
 	private double a = 1.0/150, xA = 0.002, xB = 0.004, d = 1;
@@ -46,21 +45,16 @@ class State extends GlobalSimulation{
 	// things are getting more complicated than this.
 
 	private void arrivalA(){
-		// if (numberInQueue_A + numberInQueue_B == 0){ //B priority
-		// 	insertEvent(READY_A, time + xA);
-		// }
-		if (numberInQueue_A == 0){  //A priority
+		if (numberInQueue_A + numberInQueue_B == 0){
 			insertEvent(READY_A, time + xA);
 		}
 
 		numberInQueue_A++;
+
 		insertEvent(ARRIVAL_A, time + exp(a));
 	}
 	private void arrivalB(){
-		// if (numberInQueue_B == 0){ //B priority
-		// 	insertEvent(READY_B, time + xB);
-		// }
-		if (numberInQueue_A + numberInQueue_B == 0){ //A priority
+		if (numberInQueue_A + numberInQueue_B == 0){ 
 			insertEvent(READY_B, time + xB);
 		}
 		numberInQueue_B++;
@@ -89,7 +83,6 @@ class State extends GlobalSimulation{
 	}
 	
 	private void measure(){
-		currentNumberInQueueList.add((double) numberInQueue_A + numberInQueue_B);
 		totalCustomerInQueues = totalCustomerInQueues + numberInQueue_A + numberInQueue_B;
 		noMeasurements++;
 		insertEvent(MEASURE, time + 0.1);
@@ -99,4 +92,5 @@ class State extends GlobalSimulation{
 		double lambda = 1.0 / time;
 		return Math.log(1 - slump.nextDouble()) / (-lambda);
 	}
+	
 }

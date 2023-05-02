@@ -26,7 +26,7 @@ public class MainSimulation extends Global {
 		Gen Generator = new Gen();
 
 		// 0.11, 0.15 and 2.00 seconds
-		Generator.lambda = 1 / QS.uni(0.11); // Generator ska generera nio kunder per sekund //Generator shall generate 9
+		Generator.lambda = 2.0; // Generator ska generera nio kunder per sekund //Generator shall generate 9
 											// customers per second
 		// Generator.sendTo = Q[0]; //De genererade kunderna ska skickas till k�systemet
 		// QS // The generated customers shall be sent to Q1
@@ -36,13 +36,14 @@ public class MainSimulation extends Global {
 			queues[i] = new QS();
 			queues[i].sendTo = null;
 			Generator.queues.add(queues[i]);
+			SignalList.SendSignal(MEASURE, queues[i], time);
 		}
 
 		// H�r nedan skickas de f�rsta signalerna f�r att simuleringen ska komma ig�ng.
 		// To start the simulation the first signals are put in the signal list
 
 		SignalList.SendSignal(READY, Generator, time);
-		SignalList.SendSignal(MEASURE, Generator, time);
+		// SignalList.SendSignal(MEASURE, Generator, time);
 
 		// Detta �r simuleringsloopen:
 		// This is the main loop
@@ -61,14 +62,19 @@ public class MainSimulation extends Global {
 		// and the following mean
 		// arrival times to the dispatcher: 0.11, 0.15 and 2.00 seconds. Which is the
 		// best algorithm?
-
+		double sum = 0;
 		for (QS qs : queues) {
-			System.out.println(qs.numberInQueue);
+
+			sum += 1.0*qs.accumulated / qs.noMeasurements;
+			System.out.println("mean number queue: " + 1.0*qs.accumulated / qs.noMeasurements);
 		}
+		System.out.println(sum);
 
-		System.out.println(Generator.totalNumberInQueues);
+			// System.out.println(1.0*q);
 
-		System.out.println("Mean number of jobs in the queuing systems: "+ 1.0 * Generator.totalNumberInQueues / Generator.noMeasurements);
+		// System.out.println(Generator.totalNumberInQueues);
+
+		// System.out.println("Mean number of jobs in the queuing systems: "+ 1.0 * Generator.totalNumberInQueues / Generator.noMeasurements);
 
 		// for (int i = 0; i < 20; i++) {
 		// 	Generator.randomDistribution();

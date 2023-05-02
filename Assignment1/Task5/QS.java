@@ -6,6 +6,8 @@ import java.io.*;
 // This class defines a simple queuing system with one server. It inherits Proc so that we can use time and the
 // signal names without dot notation
 class QS extends Proc{
+	public int accumulated, noMeasurements;
+
 	public int numberInQueue = 0;
 	public Proc sendTo;
 	Random slump = new Random();
@@ -29,6 +31,11 @@ class QS extends Proc{
 				if (numberInQueue > 0){
 					SignalList.SendSignal(READY, this, time + exp(x1));
 				}
+			} break;
+			case MEASURE:{
+				noMeasurements++;
+				accumulated = accumulated + numberInQueue;
+				SignalList.SendSignal(MEASURE, this, time + 1);
 			} break;
 		}
 	}

@@ -23,9 +23,9 @@ class Gen extends Proc{
 		switch (x.signalType){
 			case READY:{
 				//set sendTo variable
-				sendTo = roundRobin();
+				sendTo = equalDistribution();
 				SignalList.SendSignal(ARRIVAL, sendTo, time);
-				SignalList.SendSignal(READY, this, time + 1/lambda); //send new signal to get new customer
+				SignalList.SendSignal(READY, this, time + exp(lambda)); //send new signal to get new customer
 				// (2.0/lambda)*slump.nextDouble()
 			} 
 				break;
@@ -56,12 +56,20 @@ class Gen extends Proc{
 	}
 
 	private Proc equalDistribution() {
-		int min = Integer.MAX_VALUE;
+		int minVal = Integer.MAX_VALUE;
+		int minIdx = 0;
 		for (int i = 0; i < queues.size(); i++){
-			if(queues.get(i).numberInQueue < queues.get(min).numberInQueue){
-				min = i; 
+			int cVal = queues.get(i).numberInQueue;
+			if(cVal < minVal){
+				minVal = cVal;
+				minIdx = i;
 			}
 		}
-		return queues.get(min);
+		return queues.get(minIdx);
+	}
+
+	public double exp(double time){
+		double lambda = 1/time;
+		return Math.log(1-slump.nextDouble())/(-lambda);
 	}
 }
