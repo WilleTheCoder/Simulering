@@ -1,0 +1,17 @@
+Invest in a share.
+
+Normal year: constant growth 30% per annum.
+
+DISTURBANCE (uniform dist. mean 4 years)
+
+1. 10% -> 25% shareholders sell -> drop in 25%
+2. 25% -> 40% shareholders sell -> drop in 50%
+3. 15% -> 50% shareholders sell -> drop in 60%
+else: no shares sold -> drop in 10%
+
+saved fixed amount per month
+interest added every month
+growth rate contant over the year
+
+Find:
+expected time to save up to 2mkr. every month you save [5,10,15]tkr

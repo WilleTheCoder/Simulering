@@ -8,6 +8,10 @@ class State extends GlobalSimulation{
 	public int numberInQueue = 0, accumulated = 0, noMeasurements = 0, nbrofGoing = 0, numberofArrivals = 0;
 	public int lambda = 0;
 	public boolean doneForDay = false;
+	public ArrayList<Double> presc_arrival_times = new ArrayList<>();
+	public ArrayList<Double> presc_times = new ArrayList<>();
+
+
 	Random slump = new Random(); // This is just a random number generator
 	
 	
@@ -33,6 +37,7 @@ class State extends GlobalSimulation{
 	// things are getting more complicated than this.
 	
 	private void arrival(){
+		presc_arrival_times.add(time);
 		numberofArrivals++;
 		if (numberInQueue == 0)
 			insertEvent(READY, time + uni(10, 20));
@@ -47,6 +52,7 @@ class State extends GlobalSimulation{
 	private void ready(){
 		numberInQueue--;
 		nbrofGoing++;
+		presc_times.add(time - presc_arrival_times.remove(presc_arrival_times.size()-1));
 		if (numberInQueue > 0){
 			insertEvent(READY, time + uni(10, 20));
 		}
@@ -62,36 +68,15 @@ class State extends GlobalSimulation{
 
 	}
 
-	public double uni(int a, int b){
-		return a + slump.nextDouble()*b;
+	public double uni(double a, double b) {
+		return a + slump.nextDouble() * (b - a);
 	}
+	
+	
 
 	public double pois(double mean) {
 		double u = slump.nextDouble();
 		return Math.log(1-u)*-mean;
-	}
-
-	public double[] confidenceInterval(ArrayList<Double> givenNumbers) {
-
-		// calculate the mean value (= average)
-		double sum = 0.0;
-		for (double num : givenNumbers) {
-			sum += num;
-		}
-		double mean = sum / givenNumbers.size();
-	
-		// calculate standard deviation
-		double squaredDifferenceSum = 0.0;
-		for (double num : givenNumbers) {
-			squaredDifferenceSum += (num - mean) * (num - mean);
-		}
-		double variance = squaredDifferenceSum / givenNumbers.size();
-		double standardDeviation = Math.sqrt(variance);
-	
-		// value for 95% confidence interval, source: https://en.wikipedia.org/wiki/Confidence_interval#Basic_Steps
-		double confidenceLevel = 1.96;
-		double temp = confidenceLevel * standardDeviation / Math.sqrt(givenNumbers.size());
-		return new double[]{mean - temp, mean + temp};
 	}
 
 
