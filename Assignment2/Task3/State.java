@@ -28,8 +28,8 @@ class State extends GlobalSimulation {
 	// monthly investment
 	private void investment() {
 		write_to_file();
-		share_hold += monthly_investment;
 		share_hold = share_hold * monthly_growth;
+		share_hold += monthly_investment;
 		insertEvent(INVESTMENT, time + 1);
 	}
 
@@ -49,19 +49,19 @@ class State extends GlobalSimulation {
 	private void stock_disturbance() {
 		int x = slump.nextInt(100);
 
-		if (x < 10) {
-			share_hold = share_hold * 0.25;
-		} else if (x < 25) {
-			share_hold = share_hold * 0.50;
-		} else if (x < 50) {
-			share_hold = share_hold * 0.60;
+		if (x <= 10) {
+			share_hold = share_hold * (1 - 0.25);
+		} else if (x <= 25) {
+			share_hold = share_hold * (1 - 0.60);
+		} else if (x <= 50) {
+			share_hold = share_hold * (1 - 0.50);
 		} else {
-			share_hold = share_hold * 0.10;
+			share_hold = share_hold * (1 - 0.10);
 		}
 	}
 
 	public boolean isRich() {
-		return share_hold > moneyGoal;
+		return share_hold >= moneyGoal;
 	}
 
 	public double from_yearly_to_montly_rate(double annualGrowthRate) {

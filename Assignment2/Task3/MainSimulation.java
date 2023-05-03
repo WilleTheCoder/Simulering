@@ -7,8 +7,8 @@ public class MainSimulation extends GlobalSimulation {
 		int N = 10000;
 		int noOfSims = 0;
 		ArrayList<Double> timeList = new ArrayList<>();
-		
-		while (noOfSims < N) {
+		double ci_len = 100;
+		while (noOfSims < N || ci_len < 2.0) {
 			FileWriter fw = new FileWriter("res.txt");
 			Event actEvent;
 			State actState = new State(); // The state that shoud be used
@@ -29,17 +29,16 @@ public class MainSimulation extends GlobalSimulation {
 			}
 			noOfSims++;
 			timeList.add(time);
+			double[] ci = confidenceInterval(timeList);
+			// System.out.println("confidence interval:" + ci[0] + " : " + ci[1]);
+			ci_len = ci[1] - ci[0];
+			// System.out.println("interval length: " + ci_len);
 			fw.close();
 		}
 
 		// Printing the result of the simulation
-		double[] ci = confidenceInterval(timeList);
-		System.out.println("confidence interval:" + ci[0] + " : " + ci[1]);
-		double ci_len = ci[1] - ci[0];
-		System.out.println("interval length: " + ci_len);
 
-		System.out.println(time);
-
+		// System.out.println(time);
 	}
 
 	public static double[] confidenceInterval(ArrayList<Double> list) {
@@ -50,5 +49,4 @@ public class MainSimulation extends GlobalSimulation {
 		double temp = confidenceLevel * standardDeviation / Math.sqrt(list.size());
 		return new double[] { mean - temp, mean + temp };
 	}
-
 }
