@@ -87,27 +87,14 @@ class State extends GlobalSimulation{
 		return -Math.log(1-u)/mean;
 	}
 
-	public double[] confidenceInterval(ArrayList<Integer> givenNumbers) {
 
-		// calculate the mean value (= average)
-		double sum = 0.0;
-		for (int num : givenNumbers) {
-			sum += num;
-		}
-		double mean = sum / givenNumbers.size();
-	
-		// calculate standard deviation
-		double squaredDifferenceSum = 0.0;
-		for (int num : givenNumbers) {
-			squaredDifferenceSum += (num - mean) * (num - mean);
-		}
-		double variance = squaredDifferenceSum / givenNumbers.size();
-		double standardDeviation = Math.sqrt(variance);
-	
-		// value for 95% confidence interval, source: https://en.wikipedia.org/wiki/Confidence_interval#Basic_Steps
+	public static double[] confidenceInterval(ArrayList<Double> list) {
+		double mean = list.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+		double standardDeviation = Math
+				.sqrt(list.stream().mapToDouble(num -> Math.pow(num - mean, 2)).average().orElse(0.0));
 		double confidenceLevel = 1.96;
-		double temp = confidenceLevel * standardDeviation / Math.sqrt(givenNumbers.size());
-		return new double[]{mean - temp, mean + temp};
+		double temp = confidenceLevel * standardDeviation / Math.sqrt(list.size());
+		return new double[] { mean - temp, mean + temp };
 	}
 
 

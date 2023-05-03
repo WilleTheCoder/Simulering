@@ -37,7 +37,7 @@ class State extends GlobalSimulation {
 		stock_disturbance();
 		insertEvent(DISTURBANCE, time + slump.nextInt(96));
 	}
-
+	
 	private void write_to_file() {
 		try {
 			fw.write(time + " " + share_hold + "\n");
@@ -62,23 +62,6 @@ class State extends GlobalSimulation {
 
 	public boolean isRich() {
 		return share_hold > moneyGoal;
-	}
-
-	public double uni() {
-		// Generate a uniformly distributed random value between -2 and 2
-		double u = -2 + 4 * slump.nextDouble();
-
-		// Convert the value to months and round to the nearest integer
-		int disturbance = (int) Math.round(u * 12);
-
-		// Make sure the disturbance is within the valid range
-		if (disturbance < -96) {
-			disturbance = -96;
-		} else if (disturbance > 96) {
-			disturbance = 96;
-		}
-
-		return disturbance;
 	}
 
 	public double from_yearly_to_montly_rate(double annualGrowthRate) {

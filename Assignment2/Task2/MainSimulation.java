@@ -46,11 +46,11 @@ public class MainSimulation extends GlobalSimulation {
 		System.out.println("confidence interval:" + ci2[0] + " : " + ci2[1]);
 	}
 
-	public static double[] confidenceInterval(ArrayList<Double> givenNumbers) {
-		double mean = givenNumbers.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-		double standardDeviation = Math.sqrt(givenNumbers.stream().mapToDouble(num -> Math.pow(num - mean, 2)).average().orElse(0.0));
+	public static double[] confidenceInterval(ArrayList<Double> list) {
+		double mean = list.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+		double standardDeviation = Math.sqrt(list.stream().mapToDouble(num -> Math.pow(num - mean, 2)).average().orElse(0.0));
 		double confidenceLevel = 1.96;
-		double temp = confidenceLevel * standardDeviation / Math.sqrt(givenNumbers.size());
+		double temp = confidenceLevel * standardDeviation / Math.sqrt(list.size());
 		return new double[]{mean - temp, mean + temp};
 	}
 	
