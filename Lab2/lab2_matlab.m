@@ -1,5 +1,4 @@
 %% Problem 1.1
-
 clc;
 c = [13;
     11];
@@ -25,8 +24,8 @@ lb =[0;
 options = optimoptions('linprog', 'Algorithm', 'interior-point', 'Display', 'iter');
 %options = optimoptions('linprog', 'Algorithm', 'interior-point', 'Display', 'off');
 
-[x, fval, exitflag, output, lambda] = linprog(c, A, b,[],[],lb,[],[], options);
-
+[x, fval_p, exitflag, output, lambda] = linprog(c, A, b,[],[],lb,[],[], options);
+x
 %% Problem 1.2
 
   clc;
@@ -58,8 +57,12 @@ options = optimoptions('linprog', 'Algorithm', 'dual-simplex', 'Display', 'iter'
 %options = optimoptions('linprog', 'Algorithm', 'interior-point', 'Display', 'iter');
 %options = optimoptions('linprog', 'Algorithm', 'interior-point', 'Display', 'off');
   
-[x, fval, exitflag, output, lambda] = linprog(c, A, b,[],[],lb,[],[],options);
+[x, fval_d, exitflag, output, lambda] = linprog(c, A, b,[],[],lb,[],[],options);
 
+x
+%% COMPARE
+fprintf("Primal optimal value: %f\n", -1*fval_p);
+fprintf("Dual optimal value: %f\n", fval_d);
 %% Task 2.1
 
 clc;
