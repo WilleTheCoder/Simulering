@@ -44,7 +44,7 @@ class State extends GlobalSimulation {
 
 	private void readyA() {
 		numberInQueue_A--;
-		insertEvent(ARRIVAL_B, time + exp(d)); //set exp delay
+		insertEvent(ARRIVAL_B, time + d); //set exp delay
 		serve_order();
 	}
 
