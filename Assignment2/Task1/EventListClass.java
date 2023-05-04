@@ -1,5 +1,4 @@
 
-
 public class EventListClass {
 	
 	private Event list, last; // Used to build a linked list
@@ -13,11 +12,12 @@ public class EventListClass {
 	// The method insertEvent creates a new event, and searches the list of events for the 
 	// right place to put the new event.
 	
-	public void InsertEvent(int type, double TimeOfEvent){
+	public void InsertEvent(int type, double TimeOfEvent, int i){
  	Event dummy, predummy;
  	Event newEvent = new Event();
  	newEvent.eventType = type;
  	newEvent.eventTime = TimeOfEvent;
+	newEvent.i = i;
  	predummy = list;
  	dummy = list.next;
  	while ((dummy.eventTime < newEvent.eventTime) & (dummy != last)){

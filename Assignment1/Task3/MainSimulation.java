@@ -2,7 +2,6 @@
 import java.util.*;
 import java.io.*;
 
-
 public class MainSimulation extends GlobalSimulation{
  
     public static void main(String[] args) throws IOException {
@@ -13,22 +12,21 @@ public class MainSimulation extends GlobalSimulation{
         insertEvent(MEASURE, 5);
 
         // The main simulation loop
-    	while (time < 10000){
+    	while (time < 50000){
     		actEvent = eventList.fetchEvent();
     		time = actEvent.eventTime;
     		actState.treatEvent(actEvent);
     	}
 
     	// Printing the result of the simulation, in this case a mean value
-
-		System.out.println("--------TASK1--------\n");
-
+		System.out.println("--------TASK3--------\n");
 		System.out.println(actState.noMeasurements);
+    	System.out.println("Observed mean number of customers: " + 1.0*actState.accumulated/actState.noMeasurements);
+    	System.out.println("Calculated mean number of customers: " + 2/(actState.a-1));
 
-		System.out.println("Mean number of customers in Q2: " + (1.0*actState.totalNumberInQueue2)/actState.noMeasurements);
-
-		System.out.println("Probability that a customer is rejected in Q1:  " + 1.0*actState.noRejected/actState.arrivals);
-
+    	System.out.println("Observed mean time a customers spends: " + 1.0*actState.timeInTotal/actState.numberOfGoing);
+    	System.out.println("Calculated mean time a customers spends: " + (2*actState.a)/(actState.a-1));
+		
 		System.out.println("\n----------END----------");
     }
 }
