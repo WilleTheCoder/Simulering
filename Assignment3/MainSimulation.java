@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-//Denna klass ärver Global så att man kan använda time och signalnamnen utan punktnotation
+//Denna klass ï¿½rver Global sï¿½ att man kan anvï¿½nda time och signalnamnen utan punktnotation
 //It inherits Proc so that we can use time and the signal names without dot notation
 
 
@@ -9,14 +9,17 @@ public class MainSimulation extends Global{
 
     public static void main(String[] args) throws IOException {
 
-    	//Signallistan startas och actSignal deklareras. actSignal är den senast utplockade signalen i huvudloopen nedan.
+    	//Signallistan startas och actSignal deklareras. actSignal ï¿½r den senast utplockade signalen i huvudloopen nedan.
     	// The signal list is started and actSignal is declaree. actSignal is the latest signal that has been fetched from the 
     	// signal list in the main loop below.
+
+		Config config = new Config();
+		config.load_config();
 
     	Signal actSignal;
     	new SignalList();
 
-    	//Här nedan skapas de processinstanser som behövs och parametrar i dem ges värden.
+    	//Hï¿½r nedan skapas de processinstanser som behï¿½vs och parametrar i dem ges vï¿½rden.
     	// Here process instances are created (two queues and one generator) and their parameters are given values. 
 
     	QS Q1 = new QS();
@@ -24,16 +27,16 @@ public class MainSimulation extends Global{
 
     	Gen Generator = new Gen();
     	Generator.lambda = 9; //Generator ska generera nio kunder per sekund  //Generator shall generate 9 customers per second
-    	Generator.sendTo = Q1; //De genererade kunderna ska skickas till kösystemet QS  // The generated customers shall be sent to Q1
+    	Generator.sendTo = Q1; //De genererade kunderna ska skickas till kï¿½systemet QS  // The generated customers shall be sent to Q1
 
-    	//Här nedan skickas de första signalerna för att simuleringen ska komma igång.
+    	//Hï¿½r nedan skickas de fï¿½rsta signalerna fï¿½r att simuleringen ska komma igï¿½ng.
     	//To start the simulation the first signals are put in the signal list
 
     	SignalList.SendSignal(READY, Generator, time);
     	SignalList.SendSignal(MEASURE, Q1, time);
 
 
-    	// Detta är simuleringsloopen:
+    	// Detta ï¿½r simuleringsloopen:
     	// This is the main loop
 
     	while (time < 100000){
