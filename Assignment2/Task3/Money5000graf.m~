@@ -1,5 +1,0 @@
-data = load( 'Money_5000.txt');
-x = data(:,1);
-y = data (:,2);
-plot(x,y);
-xlabel(
