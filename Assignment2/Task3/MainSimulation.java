@@ -14,7 +14,7 @@ public class MainSimulation extends GlobalSimulation {
 		 	actState = new State(); // The state that shoud be used
 			actState.fw = fw;
 			actState.moneyGoal = 2000000;
-			actState.monthly_investment = 5000;
+			actState.monthly_investment = 10000;
 			actState.monthly_growth = 1 + actState.from_yearly_to_montly_rate(0.3);
 
 			// Some events must be put in the event list at the beginning
