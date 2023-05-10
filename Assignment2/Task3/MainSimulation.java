@@ -7,10 +7,11 @@ public class MainSimulation extends GlobalSimulation {
 		int N = 1000;
 		int noOfSims = 0;
 		ArrayList<Double> timeList = new ArrayList<>();
+		State actState = null;
 		while (noOfSims < N) {
 			FileWriter fw = new FileWriter("res.txt");
 			Event actEvent;
-			State actState = new State(); // The state that shoud be used
+		 	actState = new State(); // The state that shoud be used
 			actState.fw = fw;
 			actState.moneyGoal = 2000000;
 			actState.monthly_investment = 5000;
@@ -38,6 +39,7 @@ public class MainSimulation extends GlobalSimulation {
 		double ci_len = ci[1] - ci[0];
 		System.out.println("interval length: " + ci_len);
 		System.out.println(time);
+		System.out.println("disturb counter: " + actState.distCount);
 	}
 
 	public static double[] confidenceInterval(ArrayList<Double> list) {

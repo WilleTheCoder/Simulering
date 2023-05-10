@@ -7,7 +7,7 @@ class State extends GlobalSimulation {
 	// e.g. for measurements
 	public int moneyGoal = 0, monthly_investment = 0;
 	public double monthly_growth = 0, share_hold = 0;
-
+	public int distCount = 0;
 	public FileWriter fw = null;
 	Random slump = new Random(); // This is just a random number generator
 
@@ -34,6 +34,7 @@ class State extends GlobalSimulation {
 	}
 
 	private void disturbance() {
+		distCount++;
 		stock_disturbance();
 		insertEvent(DISTURBANCE, time + slump.nextInt(96));
 	}
