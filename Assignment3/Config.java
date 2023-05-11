@@ -5,6 +5,15 @@ import java.io.IOException;
 
 public class Config {
     
+private static Config instance = null;
+
+public static Config get_config(){
+    if (instance == null){
+        instance = new Config();
+    } 
+    return instance;
+}
+
 public int n, tp, ts, r;
 
 public void load_config() throws IOException{
@@ -36,10 +45,7 @@ public void load_config() throws IOException{
             default:
                 break;
         }
-
     }
-
-
 }
 
     
