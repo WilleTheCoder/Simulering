@@ -11,7 +11,7 @@ public class MainSimulation extends GlobalSimulation {
             GlobalSimulation.eventList = new EventListClass();
 			FileWriter fw = new FileWriter("res.txt");
 			Event actEvent;
-			State actState = new State(); // The state that shoud be used
+		 	actState = new State(); // The state that shoud be used
 			actState.fw = fw;
 			actState.moneyGoal = 2000000;
 			actState.monthly_investment = 5000;
@@ -41,6 +41,7 @@ public class MainSimulation extends GlobalSimulation {
 		System.out.println("confidence interval:" + ci[0] + " : " + ci[1]);
 		System.out.println("interval length: " + ci_len);
 		System.out.println(time);
+		System.out.println("disturb counter: " + actState.distCount);
 	}
 
 	public static double[] confidenceInterval(ArrayList<Double> list) {
