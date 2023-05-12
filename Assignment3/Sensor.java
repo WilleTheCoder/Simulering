@@ -6,6 +6,7 @@ import java.io.*;
 class Sensor extends Proc {
 	public int transmissionsStatue = 0, numberOfCollisions = 0;
 	public Proc sendTo;
+	public Gateway gateway;
 	Random slump = new Random();
 
 	public void TreatSignal(Signal x) {
@@ -17,7 +18,7 @@ class Sensor extends Proc {
 				break;
 
 			case TRANSMISSION: {
-				SignalList.SendSignal(CHECK, Gateway.getInstance(), time, this);
+				SignalList.SendSignal(CHECK, gateway, time, this);
 			}
 				break;
 		}

@@ -11,16 +11,20 @@ class Gateway extends Proc {
 	public int no_success = 0;
 	public int no_transmissions = 0;
 
-	private Gateway() {}
+	Gateway() {}
 
-	private static Gateway instance = null;
+	// private static Gateway instance = null;
 
-	public static Gateway getInstance() {
-		if (instance == null) {
-			instance = new Gateway();
-		}
-		return instance;
-	}
+	// public static Gateway getInstance() {
+	// 	if (instance == null) {
+	// 		instance = new Gateway();
+	// 	}
+	// 	return instance;
+	// }
+
+	// public void setInstance(){
+	// 	instance = null;
+	// }
 
 	// Slumptalsgeneratorn startas:
 	// The random number generator is started:

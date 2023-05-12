@@ -13,10 +13,16 @@ public class MainSimulation extends Global{
     	// The signal list is started and actSignal is declaree. actSignal is the latest signal that has been fetched from the 
 		// signal list in the main loop below.
 
+		FileWriter fw = new FileWriter("res.txt");
 		Config config = Config.get_config();
 		config.load_config();
 
-    	Signal actSignal;
+		for (int n : config.n_arr_i) {
+		time = 0;
+		Gateway gateway = new Gateway();
+		System.out.println("Running with Network Load: "+ n);
+
+    	Signal actSignal = null;
     	new SignalList();
 
     	//H�r nedan skapas de processinstanser som beh�vs och parametrar i dem ges v�rden.
@@ -24,13 +30,13 @@ public class MainSimulation extends Global{
 
 		Random slump = new Random();
 
-		Sensor[] sensors = new Sensor[config.n];
+		Sensor[] sensors = new Sensor[n];
 
 		for (int i = 0; i < sensors.length; i++) {
 			sensors[i] = new Sensor();
+			sensors[i].gateway = gateway;
 		}
 		
-    	Gateway gateway = Gateway.getInstance();
 		gateway.sensors = sensors;
 
     	//H�r nedan skickas de f�rsta signalerna f�r att simuleringen ska komma ig�ng.
@@ -47,19 +53,28 @@ public class MainSimulation extends Global{
     		time = actSignal.arrivalTime;
     		actSignal.destination.TreatSignal(actSignal);
     	}
-
-    	//Slutligen skrivs resultatet av simuleringen ut nedan:
-    	//Finally the result of the simulation is printed below:
+		//Slutligen skrivs resultatet av simuleringen ut nedan:
+		//Finally the result of the simulation is printed below:
+		System.out.println("-.-");
 		System.out.println("Number of transmissions: "+ gateway.no_transmissions);   
 		System.out.println("Number of collisions: "+ gateway.no_collisions);    
 		System.out.println("Number of successfull transmissions: "+ gateway.no_success);   
+		double lambda = gateway.no_transmissions/time;
+		double throughput2 = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
 
- 		double lambda = gateway.no_transmissions/time;
-		double throughput = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		
-		System.out.println("Throughput: " + throughput);
+		double throughput  = gateway.no_success/time;
+		System.out.println("Number of successful transmissions per unit of time: " + throughput);
+		fw.write(n + " " + throughput2 + "\n");
 
-		double x = (double) gateway.no_success / gateway.no_transmissions;
-		System.out.println(x);
+		System.out.println("----------------------------------------");
+	}
+	
+	fw.close();
+
+
+		// fw.write();
+
+		// double x = (double) gateway.no_success / gateway.no_transmissions;
+		// System.out.println(x);
 	}
 }
