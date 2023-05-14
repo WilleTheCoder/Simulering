@@ -7,23 +7,25 @@ import java.io.*;
 class Gateway extends Proc {
 	private Double lastTime;
 	private Sensor lastSensor;
+	public int r = 0; //radius
 	public int no_collisions = 0;
 	public int no_success = 0;
 	public int no_transmissions = 0;
 
-	Gateway() {}
+	Gateway() {
+	}
 
 	// private static Gateway instance = null;
 
 	// public static Gateway getInstance() {
-	// 	if (instance == null) {
-	// 		instance = new Gateway();
-	// 	}
-	// 	return instance;
+	// if (instance == null) {
+	// instance = new Gateway();
+	// }
+	// return instance;
 	// }
 
 	// public void setInstance(){
-	// 	instance = null;
+	// instance = null;
 	// }
 
 	// Slumptalsgeneratorn startas:
@@ -65,8 +67,8 @@ class Gateway extends Proc {
 				// there is a prev transmission sent from a sensor
 				br: if (lastSensor != null) {
 					// the time of the prev transmission is less than 1 = crash
-					if (time - lastTime < 1) {
-						no_collisions+=2; // increment crashes
+					if (((time - lastTime) < 1) && isSameArea(x.from, lastSensor, r)) {
+						no_collisions += 2; // increment crashes
 						// set both transmissions to idle
 						SignalList.SendSignal(IDLE, x.from, time, null);
 						SignalList.SendSignal(IDLE, lastSensor, time, null);
@@ -78,7 +80,7 @@ class Gateway extends Proc {
 						lastTime = time;
 						SignalList.SendSignal(MEASURMENT_REPORT, this, time + 1, x.from);
 					}
-				} else{
+				} else {
 					lastSensor = x.from;
 					lastTime = time;
 					SignalList.SendSignal(MEASURMENT_REPORT, this, time + 1, x.from);
@@ -87,5 +89,11 @@ class Gateway extends Proc {
 				break;
 			}
 		}
+	}
+
+	private boolean isSameArea(Sensor s1, Sensor s2, int r) {
+		// pythogoras
+		double distance = Math.sqrt(Math.pow(s2.point.x - s1.point.x, 2) + Math.pow(s2.point.y - s1.point.y, 2));
+		return distance <= r;
 	}
 }

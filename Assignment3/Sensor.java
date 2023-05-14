@@ -1,4 +1,5 @@
 import java.util.*;
+import java.awt.Point;
 import java.io.*;
 
 // This class defines a simple queuing system with one server. It inherits Proc so that we can use time and the
@@ -7,6 +8,7 @@ class Sensor extends Proc {
 	public int transmissionsStatue = 0, numberOfCollisions = 0;
 	public Proc sendTo;
 	public Gateway gateway;
+	public Point point;
 	Random slump = new Random();
 
 	public void TreatSignal(Signal x) {
