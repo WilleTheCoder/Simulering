@@ -1,5 +1,4 @@
 import java.util.*;
-import java.awt.Point;
 import java.io.*;
 
 // This class defines a simple queuing system with one server. It inherits Proc so that we can use time and the

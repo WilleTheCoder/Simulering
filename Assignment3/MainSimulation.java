@@ -1,6 +1,5 @@
 import java.util.*;
 import java.io.*;
-import java.awt.Point;
 
 //Denna klass �rver Global s� att man kan anv�nda time och signalnamnen utan punktnotation
 //It inherits Proc so that we can use time and the signal names without dot notation
@@ -28,6 +27,8 @@ public class MainSimulation extends Global {
 
 		double loss_rate = run(1000);
 
+
+		// ----------B------------
 		// while (overlap) {
 		// int idx = 0;
 		// for (int n : config.n_arr_i) {
@@ -58,6 +59,8 @@ public class MainSimulation extends Global {
 		// for (int i = 0; i < config.n_arr_i.length; i++) {
 		// fw.write(config.n_arr_i[i] + " " + intervals[i][2] + "\n");
 		// }
+		// ------------------------
+
 		fw.close();
 
 	}
@@ -79,7 +82,7 @@ public class MainSimulation extends Global {
 			Point point = null;
 			//generate point until the point doesnt already exist
 			do {
-				point = new Point(slump.nextInt(10), slump.nextInt(10));
+				point = new Point(10*slump.nextDouble(), 10*slump.nextDouble());
 			} while (coordinates.contains(point));
 			coordinates.add(point);
 			sensors[j].point = point;
@@ -96,10 +99,10 @@ public class MainSimulation extends Global {
 
 		// ---------------A---------------
 
-		// double lambda = gateway.no_transmissions/time;
-		// double throughput= lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		// System.out.println("Throughput: " + throughput);
-		// fw.write(n + " " + throughput + "\n");
+		double lambda = gateway.no_transmissions/time;
+		double throughput= lambda * config.tp * Math.exp(-2 * lambda * config.tp);
+		System.out.println("Throughput: " + throughput);
+		fw.write(n + " " + throughput + "\n");
 
 		// ---------------B---------------
 		double loss_rate = (double) gateway.no_collisions / gateway.no_transmissions;

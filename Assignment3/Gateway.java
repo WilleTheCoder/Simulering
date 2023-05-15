@@ -51,7 +51,7 @@ class Gateway extends Proc {
 				}
 				break;
 			}
-			case MEASURMENT_REPORT: {
+			case REPORT: {
 				if (lastSensor == x.from) {
 					no_success++;
 					Sensor temp = lastSensor;
@@ -65,26 +65,22 @@ class Gateway extends Proc {
 			case CHECK: {
 				no_transmissions++;
 				// there is a prev transmission sent from a sensor
-				br: if (lastSensor != null) {
-					// the time of the prev transmission is less than 1 = crash
-					if (((time - lastTime) < 1) && isSameArea(x.from, lastSensor, r)) {
-						no_collisions += 2; // increment crashes
-						// set both transmissions to idle
+				if (lastSensor != null) {
+					//the time of the lastSensor is less than 1 and its transmitting in the same area
+					if ((time - lastTime) < 1 && isSameArea(x.from, lastSensor, r)) {
+						no_collisions += 2;
 						SignalList.SendSignal(IDLE, x.from, time, null);
 						SignalList.SendSignal(IDLE, lastSensor, time, null);
 						lastSensor = null;
 						lastTime = null;
-						break br;
-					} else {
-						lastSensor = x.from;
-						lastTime = time;
-						SignalList.SendSignal(MEASURMENT_REPORT, this, time + 1, x.from);
+						break;
 					}
-				} else {
-					lastSensor = x.from;
-					lastTime = time;
-					SignalList.SendSignal(MEASURMENT_REPORT, this, time + 1, x.from);
 				}
+				
+				lastSensor = x.from;
+				lastTime = time;
+				SignalList.SendSignal(REPORT, this, time + 1, x.from);
+				
 
 				break;
 			}
@@ -93,7 +89,7 @@ class Gateway extends Proc {
 
 	private boolean isSameArea(Sensor s1, Sensor s2, int r) {
 		// pythogoras
-		double distance = Math.sqrt(Math.pow(s2.point.x - s1.point.x, 2) + Math.pow(s2.point.y - s1.point.y, 2));
+		double distance = Math.sqrt(Math.pow(s2.point.getX()- s1.point.getX(), 2) + Math.pow(s2.point.getY() - s1.point.getY(), 2));
 		return distance <= r;
 	}
 }
