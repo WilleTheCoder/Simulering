@@ -14,8 +14,9 @@ public static Config get_config(){
     return instance;
 }
 
-public int tp, ts, r;
+public int tp, ts;
 public int[] n_arr_i;
+public int[] r_arr_i;
 
 public void load_config() throws IOException{
 
@@ -30,6 +31,7 @@ public void load_config() throws IOException{
         pair[1] = pair[1].strip();
     
         line =  br.readLine();
+
         switch (pair[0]) {
             case "n":
                 String[] n_arr = pair[1].split(",");
@@ -45,7 +47,11 @@ public void load_config() throws IOException{
                 ts = Integer.parseInt(pair[1]);
                 break;
             case "r":
-                r = Integer.parseInt(pair[1]);
+                String[] r_arr = pair[1].split(",");
+                r_arr_i = new int[r_arr.length]; 
+                for (int i = 0; i < r_arr_i.length; i++) {
+                    r_arr_i[i] = Integer.parseInt(r_arr[i].trim()); 
+                }
                 break;
             default:
                 break;

@@ -1,12 +1,13 @@
-import java.util.*;
+// import java.util.*;
 import java.io.*;
+import java.util.Random;
 
 // This class defines a simple queuing system with one server. It inherits Proc so that we can use time and the
 // signal names without dot notation
 class Sensor extends Proc {
 	public int transmissionsStatue = 0, numberOfCollisions = 0;
 	public Proc sendTo;
-	public Gateway gateway;
+	// public Gateway gateway;
 	public Point point;
 	Random slump = new Random();
 
@@ -19,7 +20,8 @@ class Sensor extends Proc {
 				break;
 
 			case TRANSMISSION: {
-				SignalList.SendSignal(CHECK, gateway, time, this);
+				// SignalList.SendSignal(CHECK, Gateway.getInstance(), time, this);
+				SignalList.SendSignal(CHECK2, Gateway.getInstance(), time, this);
 			}
 				break;
 		}
