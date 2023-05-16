@@ -8,17 +8,17 @@ public class MainSimulation extends GlobalSimulation{
     	Event actEvent;
     	State actState = new State(); // The state that shoud be used
 		//set vars
-		actState.N = 100;
+		actState.N = 1000;
 		actState.M = 4000;
-		actState.T = 4;
+		actState.T = 1;
 		actState.lambda = 4;
-		actState.x = 10; 
+		actState.x = 200; 
 		List<Boolean> ready_states = new ArrayList<>(Collections.nCopies(actState.N, false));
 		actState.ready_states = ready_states;
 
-		ArrayList<Integer>NoiSList = new ArrayList<>();
+		List<Integer> NoiSList = new ArrayList<>();
 		actState.NoiSList = NoiSList;
-		FileWriter fw = new FileWriter("res1d.txt");
+		FileWriter fw = new FileWriter("res1c.txt");
 		actState.fw = fw;
 
     	// Some events must be put in the event list at the beginning
@@ -35,7 +35,7 @@ public class MainSimulation extends GlobalSimulation{
     	}
 		fw.close();
     	
-		double[] ci = actState.confidenceInterval(NoiSList);
+		double[] ci = actState.confidenceInterval(NoiSList); 
 		System.out.println("confidence interval: " + ci[0] + " : " + ci[1]);
 
     	// Printing the result of the simulation, in this case a mean value

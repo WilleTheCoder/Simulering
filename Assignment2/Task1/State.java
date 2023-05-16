@@ -88,8 +88,8 @@ class State extends GlobalSimulation{
 	}
 
 
-	public static double[] confidenceInterval(ArrayList<Double> list) {
-		double mean = list.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+	public double[] confidenceInterval(List<Integer> list) {
+		double mean = list.stream().mapToDouble(Integer::doubleValue).average().orElse(0.0);
 		double standardDeviation = Math
 				.sqrt(list.stream().mapToDouble(num -> Math.pow(num - mean, 2)).average().orElse(0.0));
 		double confidenceLevel = 1.96;
