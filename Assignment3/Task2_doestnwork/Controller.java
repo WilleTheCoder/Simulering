@@ -14,14 +14,10 @@ class Controller extends Proc {
 				// start moving minions
 				for (int i = 0; i < minions.length; i++) {
 					SignalList.SendSignal(MOVE, minions[i], time);
+					minions[i].is_in_convo = false;
 				}
 				break;
 			}
-			// case MEASURE: {
-			// 	is_done = isDone(minions);
-			// 	SignalList.SendSignal(MEASURE, this, time + 120);
-			// 	System.out.println("is it done? " + is_done);
-			// }
 		}
 	}
 

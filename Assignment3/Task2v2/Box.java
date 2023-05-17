@@ -1,5 +1,5 @@
 
-public class Box extends Global {
+public class Box{
     protected int status;
     protected Minion m1;
     protected Minion m2;
@@ -14,22 +14,18 @@ public class Box extends Global {
         } else if (m.equals(m2)){
             m2 = null;
         } else{
-            // System.out.println("why");
+            // System.out.println("Two people already talking");
         }
 
         status_update();
     }
-    public int add(Minion m) {
+    public void add(Minion m) {
         if(m1 == null){
             m1 = m;
         } else if(m2 == null){
             m2 = m;
-        } else{
-            return 3;
-        }
-        
+        }        
         status_update();
-        return -1;
     }
 
     private void status_update(){
@@ -45,8 +41,11 @@ public class Box extends Global {
     public Minion get_other(Minion m){
         if(m == m1){
             return m2;
-        } else{
+        } else if(m == m2){
             return m1;
+        } else{
+            System.out.println("wtfffffffffffffffffffffffffffffff");
+            return null;
         }
     }
 

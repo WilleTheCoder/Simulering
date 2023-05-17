@@ -13,9 +13,11 @@ public class MainSimulation extends Global {
 
 		Signal actSignal;
 		new SignalList();
+
 		List<Point> coordinates = new ArrayList<>();
 		Minion[] minions = new Minion[n_minions];
 
+		//Create Hall
 		hall = new Box[grid_size][grid_size];
 		for (int i = 0; i < grid_size; i++) {
 			for (int j = 0; j < grid_size; j++) {
@@ -23,6 +25,7 @@ public class MainSimulation extends Global {
 			}
 		}
 
+		//Init minions
 		for (int j = 0; j < n_minions; j++) {
 			minions[j] = new Minion();
 			minions[j].i = j;
@@ -32,24 +35,22 @@ public class MainSimulation extends Global {
 			} while(coordinates.contains(point));
 			minions[j].point = point;
 			coordinates.add(point);
-
-			minions[j].no_steps = 1 + rand.nextInt(10);
-			minions[j].dir = rand.nextInt(8);
-			minions[j].minion_set = new HashSet<>();
 			Box b = hall[minions[j].point.x][minions[j].point.y];
 			b.add(minions[j]);
 		}
 
+		//Controller
 		Controller controller = new Controller();
 		controller.minions = minions;
 
 		hall_to_string();
 
+		//Begin
 		SignalList.SendSignal(START, controller, time);
 
 		// This is the main loop
 		while (!controller.isDone(minions)) {
-			// System.out.println("ppl met: " + controller.minions[1].minion_set.size());
+			// System.out.println("ppl met: " + controller.minions[0].minion_set.size());
 			actSignal = SignalList.FetchSignal();
 			time = actSignal.arrivalTime;
 			actSignal.destination.TreatSignal(actSignal);
