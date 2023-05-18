@@ -60,8 +60,14 @@ class State extends GlobalSimulation{
 					mx.social_time += acquaint_time;
 					other.social_time += acquaint_time;
 
-					mx.minion_set.add(other);
-					other.minion_set.add(mx);
+					if(mx.minion_map.get(other) != null){
+						double time_spent = mx.minion_map.get(other) + acquaint_time;
+						mx.minion_map.put(other, time_spent);
+						other.minion_map.put(mx, time_spent);
+					} else{
+						mx.minion_map.put(other, acquaint_time);
+						other.minion_map.put(mx, acquaint_time);
+					}
 				}
 			}
 		}
@@ -70,7 +76,7 @@ class State extends GlobalSimulation{
 	public boolean isDone() {
 
 		for (Minion m : minions) {
-			if (m.minion_set.size() != n_minions - 1) { // you cant meet yourself sad -1
+			if (m.minion_map.size() != n_minions - 1) { // you cant meet yourself sad -1
 				return false;
 			}
 		}

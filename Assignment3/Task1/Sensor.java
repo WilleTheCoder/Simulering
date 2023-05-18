@@ -7,7 +7,7 @@ import java.util.Random;
 class Sensor extends Proc {
 	public int transmissionsStatue = 0, numberOfCollisions = 0;
 	public Proc sendTo;
-	// public Gateway gateway;
+
 	public Point point;
 	Random slump = new Random();
 

@@ -1,22 +1,22 @@
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.awt.Point;
 
 public class Minion extends GlobalSimulation {
 	protected Point point;
 	protected int dir = 0, no_steps = 0, i = 0;
 	protected double social_time = 0;
-	protected Set<Minion> minion_set;
+	protected Map<Minion, Double> minion_map;
 	protected double time_til_move = 0;
 	Random rand = new Random();
 
 	Minion() {
 		this.no_steps = 1 + rand.nextInt(9);
 		this.dir = rand.nextInt(8);
-		this.minion_set = new HashSet<>();
+		this.minion_map = new HashMap<>();
 	}
 
 	public int[] step(int x, int y) {

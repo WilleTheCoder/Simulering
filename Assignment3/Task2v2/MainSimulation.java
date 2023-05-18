@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.Map.Entry;
 import java.io.*;
 import java.awt.Point;
 
@@ -9,13 +10,15 @@ public class MainSimulation extends GlobalSimulation {
 		Random rand = new Random();
 		List<Point> coordinates = new ArrayList<>();
 		Minion[] minions = new Minion[n_minions];
+		FileWriter fw = new FileWriter("res.txt");
 
 		ArrayList<Double> timeList = new ArrayList<>();
 		double ci_len = 0;
-
-		while (!(ci_len > 0.1 && ci_len < 0.4)) { 
+		int x = 0;
+		while (!(ci_len > 0.2 && ci_len < 0.3)) {
+			x++;
 			GlobalSimulation.time = 0;
-            GlobalSimulation.eventList = new EventListClass();
+			GlobalSimulation.eventList = new EventListClass();
 			Event actEvent;
 			State actState = new State(); // The state that should be used
 
@@ -53,18 +56,46 @@ public class MainSimulation extends GlobalSimulation {
 				actState.treatEvent(actEvent);
 			}
 
-			double t = time/(60*60); //in hours
+			double t = time / (60 * 60); // in hours
 			timeList.add(t);
 			double[] ci = confidenceInterval(timeList);
 			ci_len = ci[1] - ci[0];
 			// System.out.println(ci_len);
 		}
+		System.out.println(x);
 
 		double[] ci = confidenceInterval(timeList);
 		ci_len = ci[1] - ci[0];
-		
+
 		System.out.println("confidence interval:" + ci[0] + " : " + ci[1]);
 		System.out.println("interval length: " + ci_len);
+
+		// get a minion
+		Collection<Double> times = minions[0].minion_map.values();
+		ArrayList<Double> times_sorted = new ArrayList<>(times);
+		Collections.sort(times_sorted);
+		System.out.println();
+
+		// print out time spent with other minions in order of time
+		// for (Double m_time : times_sorted) {
+		// 	System.out.println(m_time);
+		// 	// fw.write(m_time/60 + " " + share_hold + "\n");
+		// }
+
+		Map<Double, Integer> h = new TreeMap<>();
+		for (int i = 0; i < times_sorted.size(); i++) {
+			if (h.containsKey(times_sorted.get(i))) {
+				h.put(times_sorted.get(i), h.get(times_sorted.get(i)) + 1);
+			} else {
+				h.put(times_sorted.get(i), 1);
+			}
+		}
+
+		for (Entry<Double, Integer> entry: h.entrySet()) {
+			fw.write(entry.getKey() + " " + entry.getValue() + "\n");
+		}
+
+		fw.close();
 	}
 
 	public static double[] confidenceInterval(ArrayList<Double> list) {

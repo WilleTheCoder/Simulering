@@ -9,7 +9,7 @@ public class MainSimulation extends Global {
 	public static Config config;
 	public static FileWriter fw;
 	public static Random slump = new Random();
-
+	public static Gateway gateway = new Gateway();
 	public static void main(String[] args) throws IOException {
 
 		int m = 200;
@@ -72,24 +72,31 @@ public class MainSimulation extends Global {
 		// ------------------------
 
 		// ------------C---------------
-		int idx = 0;
-		for (int r : config.r_arr_i) {
-			for (int i = 0; i < m; i++) {
-				double res = run(2000, r, save);
-				list_res.add(res);
-			}
-			double[] inter = confidenceInterval(list_res);
-			intervals[idx][0] = inter[0]; // lower interval
-			intervals[idx][1] = inter[1]; // upper interval
-			intervals[idx][2] = inter[2]; // mean value
-			idx++;
-		}
+		// int idx = 0;
+		// // for (int r : config.r_arr_i) {
+		// 	for (int i = 0; i < 30; i++) {
+		// 		double res = run(2000, 10, save);
+		// 		System.out.println(res);
+		// 		list_res.add(res);
+		// 	}
+		// 	double[] inter = confidenceInterval(list_res);
+		// 	intervals[idx][0] = inter[0]; // lower interval
+		// 	intervals[idx][1] = inter[1]; // upper interval
+		// 	intervals[idx][2] = inter[2]; // mean value
+		// 	idx++;
+		// // }
+		// 	System.out.println();
+		// 	System.out.println(intervals[0][2]); // mean value);
+		// for (int i = 0; i < config.r_arr_i.length; i++) {
+			// double diff = (double) Gateway.getInstance().no_success/Gateway.getInstance().no_transmissions;
+			// System.out.println(diff);
+			// System.out.println(config.r_arr_i[i] + " " + intervals[i][2] + " " + diff);
+		// 	if (save)
+		// 		fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
+		// }
 
-		for (int i = 0; i < config.r_arr_i.length; i++) {
-			System.out.println(config.r_arr_i[i] + " " + intervals[i][2]);
-			if (save)
-				fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
-		}
+		double res = run(2000, 11, save);
+		System.out.println((double) Gateway.getInstance().no_success/Gateway.getInstance().no_transmissions);
 
 		// ---------------------------
 
@@ -98,11 +105,10 @@ public class MainSimulation extends Global {
 	}
 
 	private static double run(int n, int r, boolean save) throws IOException {
-
-		time = 0;
-		Gateway gateway = Gateway.getInstance();
-		gateway.setInstance();
+		// gateway.setInstance();
+		gateway = Gateway.getInstance();
 		gateway.r = r;
+		// System.out.println(gateway.r);
 		Signal actSignal = null;
 		new SignalList();
 		List<Point> coordinates = new ArrayList<>();
@@ -111,7 +117,6 @@ public class MainSimulation extends Global {
 
 		for (int j = 0; j < sensors.length; j++) {
 			sensors[j] = new Sensor();
-			// sensors[j].gateway = gateway;
 			Point point = null;
 			// generate point until the point doesnt already exist
 			do {
@@ -139,8 +144,9 @@ public class MainSimulation extends Global {
 
 		// double lambda = gateway.no_transmissions/time;
 		// double throughput= lambda * config.tp * Math.exp(-2 * lambda * config.tp);
+		
 
-		double throughput = (double) gateway.no_success / n;
+		double throughput = (double) Gateway.getInstance().no_success / Gateway.getInstance().no_transmissions;
 		if (save)
 			fw.write(n + " " + throughput + "\n");
 		// ---------------B---------------
