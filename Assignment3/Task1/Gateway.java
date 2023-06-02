@@ -8,27 +8,10 @@ class Gateway extends Proc {
 	private Sensor lastSensor;
 	public int r; // radius
 	public int no_success = 0;
+	public int no_crashes = 0;
 	public int no_transmissions = 0;
 	public double lb = 0.2, ub = 1.0;
 	public int check_radius = 0;
-
-	private static Gateway instance;
-
-	Gateway() {
-		instance = this;
-	}
-
-
-	public static Gateway getInstance() {
-		if (instance == null) {
-			instance = new Gateway();
-		}
-		return instance;
-	}
-
-	public void setInstance() {
-		instance = null;
-	}
 
 	// Slumptalsgeneratorn startas:
 	// The random number generator is started:
@@ -61,54 +44,60 @@ class Gateway extends Proc {
 			}
 			case CHECK: {
 				// there is a prev transmission sent from a sensor
-				boolean flag = true;
+				no_transmissions++;
 				if (lastSensor != null) {
 					// the time of the lastSensor is less than 1 and its transmitting in the same
 					// area
-					flag = false;
-					br: if ((time - lastTime) < 1 && isSameArea(x.from, lastSensor, r)) {
+					if ((time - lastTime) < 1) {
 						SignalList.SendSignal(IDLE, x.from, time, null);
 						SignalList.SendSignal(IDLE, lastSensor, time, null);
-						flag = true;
+						no_crashes += 2;
 						lastSensor = null;
 						lastTime = null;
-						break br;
+						break;
 					}
 				}
-				if (flag) {
-					lastSensor = x.from;
-					lastTime = time;
-					SignalList.SendSignal(REPORT, this, time + 1, x.from);
-				}
+
+				lastSensor = x.from;
+				lastTime = time;
+				SignalList.SendSignal(REPORT, this, time + 1, x.from);
 				break;
 			}
 			// STRATEGY 2
 			case CHECK2: {
-				no_transmissions++;
-				boolean flag = true;
 				// there is a prev transmission sent from a sensor
-				br: if (lastSensor != null) {
+				no_transmissions++;
+				if (lastSensor != null) {
 					// the time of the lastSensor is less than 1 and its transmitting in the same
 					// area
-					flag = false;
-					if (((time - lastTime) < 1) && isSameArea(x.from, lastSensor, r)) {
-						SignalList.SendSignal(WAIT, this, time, x.from);
-						flag = true;
-						break br;
+
+					// COLLISION
+					if ((time - lastTime) < 1) {
+						// Collision is found and stopped
+						if (isSameArea(x.from, lastSensor, r)) {
+							SignalList.SendSignal(WAIT, this, time, x.from);
+							break;
+						} 
+						// Collision was not found in time
+						else {
+							SignalList.SendSignal(IDLE, x.from, time, null);
+							SignalList.SendSignal(IDLE, lastSensor, time, null);
+							no_crashes += 2;
+							lastSensor = null;
+							lastTime = null;
+							break;
+						}
 					}
 				}
-
-				if (flag) {
-					lastSensor = x.from;
-					lastTime = time;
-					SignalList.SendSignal(REPORT, Gateway.getInstance(), time + 1, x.from);
-				}
-
+				lastSensor = x.from;
+				lastTime = time;
+				SignalList.SendSignal(REPORT, this, time + 1, x.from);
 				break;
 			}
+
 			case WAIT: {
 				double sleepTime = lb + (ub - lb) * slump.nextDouble();
-				SignalList.SendSignal(CHECK, Gateway.getInstance(), time + sleepTime, x.from);
+				SignalList.SendSignal(CHECK, this, time + sleepTime, x.from);
 				break;
 			}
 		}
@@ -119,14 +108,7 @@ class Gateway extends Proc {
 		check_radius++;
 		double distance = Math
 				.sqrt(Math.pow(s2.point.getX() - s1.point.getX(), 2) + Math.pow(s2.point.getY() - s1.point.getY(), 2));
-		return distance <= 11;
-	}
-
-	private boolean isOk(){
-		
-		
-		return false;
-		
+		return distance <= r;
 	}
 
 }

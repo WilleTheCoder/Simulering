@@ -9,94 +9,81 @@ public class MainSimulation extends Global {
 	public static Config config;
 	public static FileWriter fw;
 	public static Random slump = new Random();
-	public static Gateway gateway = new Gateway();
+	public static Gateway gateway = null;
+
 	public static void main(String[] args) throws IOException {
 
 		int m = 200;
-		boolean save = false;
+		boolean save = true;
 		if (save)
-			fw = new FileWriter("stra2_lossratex.txt");
+			fw = new FileWriter("res.txt");
 
 		config = Config.get_config();
 		config.load_config();
 		int nl = config.n_arr_i.length;
 
-		List<Double> list_res = new ArrayList<>();
-
-		boolean overlap = true;
-
 		Double intervals[][] = new Double[m][3];
 
 		// ------------A---------------
 		// for (int n : config.n_arr_i) {
-		// double loss_rate = run(n, 7, save);
-		// loss_rates.add(loss_rate);
+		// double loss_rate = run(9000, 7, save);
 		// System.out.println(loss_rate);
 		// }
 		// ---------------------------
 
 		// ----------B------------
+		// boolean overlap = true;
 		// while (overlap) {
-		// 	int idx = 0;
-		// 	for (int n : config.n_arr_i) {
-		// 		for (int i = 0; i < m; i++) {
-		// 			double res = run(n, 7, save);
-		// 			list_res.add(res);
-		// 		}
-		// 		System.out.println("Running with Network Load: " + n);
-		// 		double[] inter = confidenceInterval(list_res);
-		// 		intervals[idx][0] = inter[0]; // lower interval
-		// 		intervals[idx][1] = inter[1]; // upper interval
-		// 		intervals[idx][2] = inter[2]; // mean value
-		// 		idx++;
-		// 		System.out.println("conf for run " + idx + ": " + inter[0] + " " + inter[1] +
-		// 				" " + inter[2]);
-		// 	}
+		// int idx = 0;
+		// for (int n : config.n_arr_i) {
+		// List<Double> list_res = new ArrayList<>();
+		// for (int i = 0; i < 100; i++) {
+		// double res = run(n, 7, save);
+		// list_res.add(res);
+		// }
+		// System.out.println("Running with Network Load: " + n);
+		// double[] inter = confidenceInterval(list_res);
+		// intervals[idx][0] = inter[0]; // lower interval
+		// intervals[idx][1] = inter[1]; // upper interval
+		// intervals[idx][2] = inter[2]; // mean value
+		// idx++;
+		// System.out.println("conf for run " + idx + ": " + inter[0] + " " + inter[1] +
+		// " " + inter[2]);
+		// }
 
-		// 	// check if no overlap
-		// 	overlap = false;
-		// 	for (int i = 0; i < nl; i++) {
-		// 		for (int j = i + 1; j < nl; j++) {
-		// 			if (intervals[i][1] > intervals[j][0] && intervals[j][1] > intervals[i][0]) {
-		// 				overlap = true;
-		// 				break;
-		// 			}
-		// 		}
-		// 	}
+		// overlap = false;
 		// }
 
 		// for (int i = 0; i < config.n_arr_i.length; i++) {
-		// 	if (save)
-		// 		fw.write(config.n_arr_i[i] + " " + intervals[i][2] + "\n");
+		// if (save)
+		// fw.write(config.n_arr_i[i] + " " + intervals[i][2] + "\n");
 		// }
 		// ------------------------
 
 		// ------------C---------------
-		// int idx = 0;
-		// // for (int r : config.r_arr_i) {
-		// 	for (int i = 0; i < 30; i++) {
-		// 		double res = run(2000, 10, save);
-		// 		System.out.println(res);
-		// 		list_res.add(res);
-		// 	}
-		// 	double[] inter = confidenceInterval(list_res);
-		// 	intervals[idx][0] = inter[0]; // lower interval
-		// 	intervals[idx][1] = inter[1]; // upper interval
-		// 	intervals[idx][2] = inter[2]; // mean value
-		// 	idx++;
-		// // }
-		// 	System.out.println();
-		// 	System.out.println(intervals[0][2]); // mean value);
-		// for (int i = 0; i < config.r_arr_i.length; i++) {
-			// double diff = (double) Gateway.getInstance().no_success/Gateway.getInstance().no_transmissions;
-			// System.out.println(diff);
-			// System.out.println(config.r_arr_i[i] + " " + intervals[i][2] + " " + diff);
-		// 	if (save)
-		// 		fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
-		// }
+		int idx = 0;
+		for (int r : config.r_arr_i) {
+			List<Double> list_res = new ArrayList<>();
+			for (int i = 0; i < 30; i++) {
+				double res = run(2000, r, save);
+				list_res.add(res);
+			}
+			double[] inter = confidenceInterval(list_res);
+			intervals[idx][0] = inter[0]; // lower interval
+			intervals[idx][1] = inter[1]; // upper interval
+			intervals[idx][2] = inter[2]; // mean value
+			idx++;
+		}
 
-		double res = run(2000, 11, save);
-		System.out.println((double) Gateway.getInstance().no_success/Gateway.getInstance().no_transmissions);
+		for (int i = 0; i < config.r_arr_i.length; i++) {
+			if (save)
+				fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
+		}
+
+		// int ra = 20;
+		// double res = run(2000, ra, save);
+		// System.out.println("throughput: " + res + " - radius: " + ra);
+		
 
 		// ---------------------------
 
@@ -105,8 +92,8 @@ public class MainSimulation extends Global {
 	}
 
 	private static double run(int n, int r, boolean save) throws IOException {
-		// gateway.setInstance();
-		gateway = Gateway.getInstance();
+		gateway = new Gateway();
+		time = 0;
 		gateway.r = r;
 		// System.out.println(gateway.r);
 		Signal actSignal = null;
@@ -124,6 +111,7 @@ public class MainSimulation extends Global {
 			} while (coordinates.contains(point));
 			coordinates.add(point);
 			sensors[j].point = point;
+			sensors[j].gateway = gateway;
 		}
 
 		gateway.sensors = sensors;
@@ -137,38 +125,55 @@ public class MainSimulation extends Global {
 
 		// System.out.println("Success: " + gateway.no_success);
 		// System.out.println("Transmissions: " + gateway.no_transmissions);
+		// System.out.println("act crashes: " + gateway.no_crashes);
 		// double x = gateway.no_transmissions - gateway.no_success;
 		// System.out.println("Crashes: " + x);
 
 		// ---------------A---------------
 
-		// double lambda = gateway.no_transmissions/time;
-		// double throughput= lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		
-
-		double throughput = (double) Gateway.getInstance().no_success / Gateway.getInstance().no_transmissions;
-		if (save)
-			fw.write(n + " " + throughput + "\n");
+		// double lambda = gateway.no_transmissions / time;
+		// double throughput2 = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
+		double throughput = (double) gateway.no_success / n;
+		// if (save)
+		// fw.write(n + " " + throughput + "\n");
 		// ---------------B---------------
-		// double loss_rate = (double) (gateway.no_transmissions-gateway.no_success) /
-		// gateway.no_transmissions;
-		// return throughput;
+		// double loss_rate = (double) (gateway.no_crashes) / gateway.no_transmissions;
+		return throughput;
 		// ---------------C---------------
-		if (save)
-			fw.write(r + " " + throughput + "\n");
+		// if (save)
+		// fw.write(r + " " + throughput + "\n");
 
 		// System.out.println(r + " " + throughput);
+		// System.out.println("th: " + throughput);
 
-		return throughput;
+		// return throughput;
 	}
 
-	public static double[] confidenceInterval(List<Double> list) {
-		double mean = list.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-		double standardDeviation = Math
-				.sqrt(list.stream().mapToDouble(num -> Math.pow(num - mean, 2)).average().orElse(0.0));
-		double confidenceLevel = 1.96;
-		double temp = confidenceLevel * standardDeviation / Math.sqrt(list.size());
-		return new double[] { mean - temp, mean + temp, mean };
-	}
+	public static double[] confidenceInterval(List<Double> values) {
+		int n = values.size();
+		double[] result = new double[3];
 
+		// Calculate mean
+		double sum = 0;
+		for (double value : values) {
+			sum += value;
+		}
+		double mean = sum / n;
+		result[0] = mean; // Mean value
+
+		// Calculate standard deviation
+		double squaredSum = 0;
+		for (double value : values) {
+			squaredSum += Math.pow(value - mean, 2);
+		}
+		double standardDeviation = Math.sqrt(squaredSum / (n - 1));
+
+		// Calculate confidence interval (using z-value for 95% confidence level)
+		double z = 1.96; // Z-value for 95% confidence level
+		double marginOfError = z * (standardDeviation / Math.sqrt(n));
+		result[1] = mean - marginOfError; // Lower confidence interval
+		result[2] = mean + marginOfError; // Upper confidence interval
+
+		return result;
+	}
 }
