@@ -17,7 +17,8 @@ class State extends GlobalSimulation{
 			case MOVE:
 				// insertEvent(MOVE, time + 1);
 				move();
-				insertEvent(MOVE, time + 1/uniform_dist()); //walk_time
+				insertEvent(MOVE, time + 1/uniform_dist()); //uniform
+				// insertEvent(MOVE, time + walk_time); //walk_time
 				break;
 		}
 	}

@@ -1,8 +1,8 @@
-data = load("radius_res.txt")
-x = data(:,1)
+data = load("distribution.txt")
+x = data(:,1)/60
 y = data(:,2)
-plot(x,y)
+bar(x,y)
+title("Frequency vs Time")
+xlabel("Time (min)")
+ylabel("Frequency")
 
-title("Throughput vs Radius")
-xlabel("Radius")
-ylabel("Throughput")

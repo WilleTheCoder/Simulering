@@ -8,15 +8,20 @@ public class MainSimulation extends GlobalSimulation {
 	public static void main(String[] args) throws IOException {
 		// Some events must be put in the event list at the beginning
 		Random rand = new Random();
-		List<Point> coordinates = new ArrayList<>();
 		Minion[] minions = new Minion[n_minions];
 		FileWriter fw = new FileWriter("res.txt");
-
+		List<Point> coordinates = null;
+		
 		ArrayList<Double> timeList = new ArrayList<>();
 		double ci_len = 0;
-		int x = 0;
-		while (!(ci_len > 0.2 && ci_len < 0.3)) {
-			x++;
+		int runs = 0;
+
+		Collection<Double> timesAll = new ArrayList<Double>();
+		
+		while (runs < 1000) {
+			// !(ci_len > 0.2 && ci_len < 0.3)
+			coordinates = new ArrayList<>();
+			runs++;
 			GlobalSimulation.time = 0;
 			GlobalSimulation.eventList = new EventListClass();
 			Event actEvent;
@@ -61,8 +66,10 @@ public class MainSimulation extends GlobalSimulation {
 			double[] ci = confidenceInterval(timeList);
 			ci_len = ci[1] - ci[0];
 			// System.out.println(ci_len);
+			Collection<Double> timesOneMinion = minions[0].minion_map.values();
+			timesAll.addAll(timesOneMinion);
 		}
-		System.out.println(x);
+		System.out.println(runs);
 
 		double[] ci = confidenceInterval(timeList);
 		ci_len = ci[1] - ci[0];
@@ -71,8 +78,9 @@ public class MainSimulation extends GlobalSimulation {
 		System.out.println("interval length: " + ci_len);
 
 		// get a minion
-		Collection<Double> times = minions[0].minion_map.values();
-		ArrayList<Double> times_sorted = new ArrayList<>(times);
+		// Collection<Double> times = minions[0].minion_map.values();
+
+		ArrayList<Double> times_sorted = new ArrayList<>(timesAll);
 		Collections.sort(times_sorted);
 		System.out.println();
 
