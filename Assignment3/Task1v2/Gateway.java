@@ -11,6 +11,7 @@ class Gateway extends Proc {
 	public int no_crashes = 0;
 	public int no_transmissions = 0;
 	public double lb = 0.2, ub = 1.0;
+	public int check_radius = 0;
 
 	// Slumptalsgeneratorn startas:
 	// The random number generator is started:
@@ -18,11 +19,11 @@ class Gateway extends Proc {
 
 	public Proc sendTo;
 	public double lambda;
-
 	public Sensor[] sensors;
 
 	public void TreatSignal(Signal x) {
 		switch (x.signalType) {
+			
 			case START: {
 				// boot sensors
 				for (int i = 0; i < sensors.length; i++) {
@@ -33,34 +34,35 @@ class Gateway extends Proc {
 			case REPORT: {
 				if (lastSensor == x.from) {
 					no_success++;
+					Sensor temp = lastSensor;
 					lastSensor = null;
 					lastTime = null;
-				} else {
-					no_crashes += 2;
+					SignalList.SendSignal(IDLE, temp, time, null);
 				}
-				SignalList.SendSignal(IDLE, x.from, time, null);
 
 				break;
 			}
 			case CHECK: {
-				// there is a previous transmission sent from a sensor
+				// there is a prev transmission sent from a sensor
 				no_transmissions++;
 				if (lastSensor != null) {
-					// the time of the lastSensor is less than or equal to 1
-					if ((time - lastTime) <= 1.0) {
+					// the time of the lastSensor is less than 1 and its transmitting in the same
+					// area
+					if ((time - lastTime) < 1) {
 						SignalList.SendSignal(IDLE, x.from, time, null);
+						SignalList.SendSignal(IDLE, lastSensor, time, null);
+						no_crashes += 2;
 						lastSensor = null;
 						lastTime = null;
 						break;
 					}
-				} else {
-					lastSensor = x.from;
-					lastTime = time;
-					SignalList.SendSignal(REPORT, this, time + Config.get_config().tp, x.from);
-					break;
 				}
-			}
 
+				lastSensor = x.from;
+				lastTime = time;
+				SignalList.SendSignal(REPORT, this, time + 1, x.from);
+				break;
+			}
 			// STRATEGY 2
 			case CHECK2: {
 				// there is a prev transmission sent from a sensor
@@ -75,7 +77,7 @@ class Gateway extends Proc {
 						if (isSameArea(x.from, lastSensor, r)) {
 							SignalList.SendSignal(WAIT, this, time, x.from);
 							break;
-						}
+						} 
 						// Collision was not found in time
 						else {
 							SignalList.SendSignal(IDLE, x.from, time, null);
@@ -102,6 +104,8 @@ class Gateway extends Proc {
 	}
 
 	private boolean isSameArea(Sensor s1, Sensor s2, int r) {
+		// pythogoras
+		check_radius++;
 		double distance = Math
 				.sqrt(Math.pow(s2.point.getX() - s1.point.getX(), 2) + Math.pow(s2.point.getY() - s1.point.getY(), 2));
 		return distance <= r;

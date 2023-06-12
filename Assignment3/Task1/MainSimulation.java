@@ -25,10 +25,10 @@ public class MainSimulation extends Global {
 		Double intervals[][] = new Double[m][3];
 
 		// ------------A---------------
-		// for (int n : config.n_arr_i) {
-		// double loss_rate = run(9000, 7, save);
-		// System.out.println(loss_rate);
-		// }
+		for (int n : config.n_arr_i) {
+			double loss_rate = run(n, 7, save);
+			System.out.println(n + " : "+  loss_rate);
+		}
 		// ---------------------------
 
 		// ----------B------------
@@ -61,24 +61,24 @@ public class MainSimulation extends Global {
 		// ------------------------
 
 		// ------------C---------------
-		int idx = 0;
-		for (int r : config.r_arr_i) {
-			List<Double> list_res = new ArrayList<>();
-			for (int i = 0; i < 30; i++) {
-				double res = run(2000, r, save);
-				list_res.add(res);
-			}
-			double[] inter = confidenceInterval(list_res);
-			intervals[idx][0] = inter[0]; // lower interval
-			intervals[idx][1] = inter[1]; // upper interval
-			intervals[idx][2] = inter[2]; // mean value
-			idx++;
-		}
+		// int idx = 0;
+		// for (int r : config.r_arr_i) {
+		// 	List<Double> list_res = new ArrayList<>();
+		// 	for (int i = 0; i < 30; i++) {
+		// 		double res = run(2000, r, save);
+		// 		list_res.add(res);
+		// 	}
+		// 	double[] inter = confidenceInterval(list_res);
+		// 	intervals[idx][0] = inter[0]; // lower interval
+		// 	intervals[idx][1] = inter[1]; // upper interval
+		// 	intervals[idx][2] = inter[2]; // mean value
+		// 	idx++;
+		// }
 
-		for (int i = 0; i < config.r_arr_i.length; i++) {
-			if (save)
-				fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
-		}
+		// for (int i = 0; i < config.r_arr_i.length; i++) {
+		// 	if (save)
+		// 		fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
+		// }
 
 		// int ra = 20;
 		// double res = run(2000, ra, save);
@@ -91,11 +91,16 @@ public class MainSimulation extends Global {
 			fw.close();
 	}
 
+
+
+
+
+
 	private static double run(int n, int r, boolean save) throws IOException {
 		gateway = new Gateway();
-		time = 0;
+		Global.time = 0;
 		gateway.r = r;
-		// System.out.println(gateway.r);
+
 		Signal actSignal = null;
 		new SignalList();
 		List<Point> coordinates = new ArrayList<>();
@@ -117,27 +122,31 @@ public class MainSimulation extends Global {
 		gateway.sensors = sensors;
 		SignalList.SendSignal(START, gateway, time, null);
 
-		while (time < 1000) {
+		while (time < 10000) {
 			actSignal = SignalList.FetchSignal();
 			time = actSignal.arrivalTime;
 			actSignal.destination.TreatSignal(actSignal);
 		}
 
+	   double lambda_p = (1.0*gateway.no_transmissions/time);
+	   double T_put = lambda_p * Math.exp(-2*lambda_p);
+	//    double packetLoss = 1.0*gateway.failedSignals/gateway.totalSignals;
+	   System.out.println("Throughput: " + T_put);
 		// System.out.println("Success: " + gateway.no_success);
-		// System.out.println("Transmissions: " + gateway.no_transmissions);
+		System.out.println("Transmissions: " + gateway.no_transmissions);
 		// System.out.println("act crashes: " + gateway.no_crashes);
 		// double x = gateway.no_transmissions - gateway.no_success;
-		// System.out.println("Crashes: " + x);
+		System.out.println("Crashes: " + gateway.no_crashes);
 
 		// ---------------A---------------
 
 		// double lambda = gateway.no_transmissions / time;
 		// double throughput2 = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		double throughput = (double) gateway.no_success / n;
+		double throughput = 1.0 * gateway.no_success/time;
 		// if (save)
 		// fw.write(n + " " + throughput + "\n");
 		// ---------------B---------------
-		// double loss_rate = (double) (gateway.no_crashes) / gateway.no_transmissions;
+		double loss_rate = 1.0 * gateway.no_crashes / gateway.no_transmissions;
 		return throughput;
 		// ---------------C---------------
 		// if (save)

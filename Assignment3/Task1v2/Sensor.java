@@ -1,3 +1,4 @@
+
 // import java.util.*;
 import java.io.*;
 import java.util.Random;
@@ -6,6 +7,8 @@ import java.util.Random;
 // signal names without dot notation
 class Sensor extends Proc {
 	public Gateway gateway;
+	public int transmissionsStatue = 0, numberOfCollisions = 0;
+	public Proc sendTo;
 
 	public Point point;
 	Random slump = new Random();
@@ -19,14 +22,16 @@ class Sensor extends Proc {
 				break;
 
 			case TRANSMISSION: {
-				SignalList.SendSignal(CHECK, gateway, time, this);
-				// SignalList.SendSignal(CHECK2, gateway, time, this);
+				// SignalList.SendSignal(CHECK, gateway, time, this);
+				SignalList.SendSignal(CHECK2, gateway, time, this);
 			}
 				break;
 		}
 	}
 
-	public double exp(double lambda){
-		return Math.log(1 - slump.nextDouble())*-lambda;
+	public double exp(double time) {
+		double lambda = 1 / time;
+		return Math.log(1 - slump.nextDouble()) / (-lambda);
 	}
+
 }
