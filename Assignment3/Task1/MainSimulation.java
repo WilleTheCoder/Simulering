@@ -25,10 +25,10 @@ public class MainSimulation extends Global {
 		Double intervals[][] = new Double[m][3];
 
 		// ------------A---------------
-		for (int n : config.n_arr_i) {
-			double loss_rate = run(n, 7, save);
-			System.out.println(n + " : "+  loss_rate);
-		}
+		// for (int n : config.n_arr_i) {
+		double loss_rate = run(1000, 7, save);
+		System.out.println("n" + " : "+  loss_rate);
+		// }
 		// ---------------------------
 
 		// ----------B------------
@@ -97,12 +97,13 @@ public class MainSimulation extends Global {
 
 
 	private static double run(int n, int r, boolean save) throws IOException {
-		gateway = new Gateway();
+   		gateway = new Gateway();
 		Global.time = 0;
 		gateway.r = r;
 
 		Signal actSignal = null;
 		new SignalList();
+
 		List<Point> coordinates = new ArrayList<>();
 
 		Sensor[] sensors = new Sensor[n];
@@ -130,19 +131,23 @@ public class MainSimulation extends Global {
 
 	   double lambda_p = (1.0*gateway.no_transmissions/time);
 	   double T_put = lambda_p * Math.exp(-2*lambda_p);
+
 	//    double packetLoss = 1.0*gateway.failedSignals/gateway.totalSignals;
-	   System.out.println("Throughput: " + T_put);
+	   System.out.println("Expected throughput: " + T_put);
 		// System.out.println("Success: " + gateway.no_success);
-		System.out.println("Transmissions: " + gateway.no_transmissions);
+		// System.out.println("Transmissions: " + gateway.no_transmissions);
 		// System.out.println("act crashes: " + gateway.no_crashes);
 		// double x = gateway.no_transmissions - gateway.no_success;
-		System.out.println("Crashes: " + gateway.no_crashes);
+		// System.out.println("Crashes: " + gateway.no_crashes);
+		// System.out.println("Time: "+ time);
 
 		// ---------------A---------------
 
 		// double lambda = gateway.no_transmissions / time;
 		// double throughput2 = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		double throughput = 1.0 * gateway.no_success/time;
+		// double throughput = 1.0 * gateway.no_success/time;
+		double throughput = (1.0 * gateway.no_success) / time;
+
 		// if (save)
 		// fw.write(n + " " + throughput + "\n");
 		// ---------------B---------------

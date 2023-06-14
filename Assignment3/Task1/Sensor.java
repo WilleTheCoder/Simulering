@@ -14,19 +14,28 @@ class Sensor extends Proc {
 		switch (x.signalType) {
 
 			case IDLE: {
-				SignalList.SendSignal(TRANSMISSION, this, time + exp(Config.get_config().ts), this);
+				// SignalList.SendSignal(TRANSMISSION, this, time + exp(Config.get_config().ts), this);
 			}
 				break;
 
 			case TRANSMISSION: {
-				SignalList.SendSignal(CHECK, gateway, time, this);
-				// SignalList.SendSignal(CHECK2, gateway, time, this);
+				SignalList.SendSignal(TRANSMISSION, gateway, time, this);
+				SignalList.SendSignal(TRANSMISSION, this, time + exp(Config.get_config().ts), this);
+
+
+				// SignalList.SendSignal(CHECK, gateway, time, this);
+				// SignalList.SendSignal(IDLE, this, time, null);
+				// // SignalList.SendSignal(CHECK2, gateway, time, this);
 			}
 				break;
 		}
 	}
 
-	public double exp(double lambda){
-		return Math.log(1 - slump.nextDouble())*-lambda;
-	}
 }
+
+/*  1. All sensors call tranmission after exponential time
+	2. Increment number of transmission in gateway
+	3. Put sensor in active list
+	4. Call FININSED 
+
+*/
