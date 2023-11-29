@@ -1,8 +1,12 @@
 import java.util.Random;
 
 public class Global{
-	public static final int TRANSMISSION = 1, IDLE = 2, MEASURE = 3, START = 4, FINISHED = 5, CHECK = 6, CHECK2 = 7, WAIT = 8;
+	public static final int TRANSMISSION = 1, START = 2, FINISHED = 3,TRANSMISSION2 = 4;
+	public static int r;
 	public static double time = 0;
+	public static int lb = 1000;
+	public static int ub = 10000;
+
 	Random slump = new Random();
 
 	

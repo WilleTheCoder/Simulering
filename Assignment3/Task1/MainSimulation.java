@@ -13,22 +13,14 @@ public class MainSimulation extends Global {
 
 	public static void main(String[] args) throws IOException {
 
-		int m = 200;
-		boolean save = true;
-		if (save)
-			fw = new FileWriter("res.txt");
-
+		double[] result;
 		config = Config.get_config();
 		config.load_config();
-		int nl = config.n_arr_i.length;
 
-		Double intervals[][] = new Double[m][3];
+		result = run(2000, 11000);
+		System.out.println("Throughput: " + result[0]);
+		System.out.println("Loss rate: " + result[1]);
 
-		// ------------A---------------
-		// for (int n : config.n_arr_i) {
-		double loss_rate = run(1000, 7, save);
-		System.out.println("n" + " : "+  loss_rate);
-		// }
 		// ---------------------------
 
 		// ----------B------------
@@ -63,44 +55,35 @@ public class MainSimulation extends Global {
 		// ------------C---------------
 		// int idx = 0;
 		// for (int r : config.r_arr_i) {
-		// 	List<Double> list_res = new ArrayList<>();
-		// 	for (int i = 0; i < 30; i++) {
-		// 		double res = run(2000, r, save);
-		// 		list_res.add(res);
-		// 	}
-		// 	double[] inter = confidenceInterval(list_res);
-		// 	intervals[idx][0] = inter[0]; // lower interval
-		// 	intervals[idx][1] = inter[1]; // upper interval
-		// 	intervals[idx][2] = inter[2]; // mean value
-		// 	idx++;
+		// List<Double> list_res = new ArrayList<>();
+		// for (int i = 0; i < 30; i++) {
+		// double res = run(2000, r, save);
+		// list_res.add(res);
+		// }
+		// double[] inter = confidenceInterval(list_res);
+		// intervals[idx][0] = inter[0]; // lower interval
+		// intervals[idx][1] = inter[1]; // upper interval
+		// intervals[idx][2] = inter[2]; // mean value
+		// idx++;
 		// }
 
 		// for (int i = 0; i < config.r_arr_i.length; i++) {
-		// 	if (save)
-		// 		fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
+		// if (save)
+		// fw.write(config.r_arr_i[i] + " " + intervals[i][2] + "\n");
 		// }
 
 		// int ra = 20;
 		// double res = run(2000, ra, save);
 		// System.out.println("throughput: " + res + " - radius: " + ra);
-		
 
 		// ---------------------------
-
-		if (save)
-			fw.close();
 	}
 
-
-
-
-
-
-	private static double run(int n, int r, boolean save) throws IOException {
-   		gateway = new Gateway();
+	private static double[] run(int n, int r) throws IOException {
+		System.out.println("N: "+n);
+		gateway = new Gateway();
 		Global.time = 0;
-		gateway.r = r;
-
+		Global.r = r;
 		Signal actSignal = null;
 		new SignalList();
 
@@ -113,7 +96,7 @@ public class MainSimulation extends Global {
 			Point point = null;
 			// generate point until the point doesnt already exist
 			do {
-				point = new Point(10 * slump.nextDouble(), 10 * slump.nextDouble());
+				point = new Point(10000 * slump.nextDouble(), 10000 * slump.nextDouble());
 			} while (coordinates.contains(point));
 			coordinates.add(point);
 			sensors[j].point = point;
@@ -129,38 +112,16 @@ public class MainSimulation extends Global {
 			actSignal.destination.TreatSignal(actSignal);
 		}
 
-	   double lambda_p = (1.0*gateway.no_transmissions/time);
-	   double T_put = lambda_p * Math.exp(-2*lambda_p);
+		// double lambda_p = (1.0 * gateway.no_transmissions / time);
+		// double T_put = lambda_p * Math.exp(-2 * lambda_p);
 
-	//    double packetLoss = 1.0*gateway.failedSignals/gateway.totalSignals;
-	   System.out.println("Expected throughput: " + T_put);
-		// System.out.println("Success: " + gateway.no_success);
-		// System.out.println("Transmissions: " + gateway.no_transmissions);
-		// System.out.println("act crashes: " + gateway.no_crashes);
-		// double x = gateway.no_transmissions - gateway.no_success;
-		// System.out.println("Crashes: " + gateway.no_crashes);
-		// System.out.println("Time: "+ time);
-
-		// ---------------A---------------
-
-		// double lambda = gateway.no_transmissions / time;
-		// double throughput2 = lambda * config.tp * Math.exp(-2 * lambda * config.tp);
-		// double throughput = 1.0 * gateway.no_success/time;
 		double throughput = (1.0 * gateway.no_success) / time;
+		// double loss_rate = 1.0 * (gateway.no_transmissions - gateway.no_success) / gateway.no_transmissions;
+		double loss_rate = (1 - (double) gateway.no_success / gateway.no_transmissions);
 
-		// if (save)
-		// fw.write(n + " " + throughput + "\n");
-		// ---------------B---------------
-		double loss_rate = 1.0 * gateway.no_crashes / gateway.no_transmissions;
-		return throughput;
-		// ---------------C---------------
-		// if (save)
-		// fw.write(r + " " + throughput + "\n");
+		double[] result = { throughput, loss_rate };
 
-		// System.out.println(r + " " + throughput);
-		// System.out.println("th: " + throughput);
-
-		// return throughput;
+		return result;
 	}
 
 	public static double[] confidenceInterval(List<Double> values) {
